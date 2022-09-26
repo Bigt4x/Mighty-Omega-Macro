@@ -511,7 +511,7 @@ StartSP:
                 Send {Space} ; check 
                 sc("w", 2) ; w up
                 Sleep 100
-                sc("s", 1)sc("w", 3)sc("w", 1) ;run
+                fwr() ; run
                 Sleep 3000
                 Timer:=A_TickCount
                 Loop,
@@ -1046,6 +1046,11 @@ sc(key,type) {
     } else if (type = 3) {
         send {%thatkey%}
     }
+}
+fwr() {
+    w := format("sc{:x}", getKeySC("w"))
+    s := format("sc{:x}", getKeySC("s"))
+    SendInput, {%s% down}{%w%}{%w% down}
 }
 ;; sub
 LoadMainGui:
