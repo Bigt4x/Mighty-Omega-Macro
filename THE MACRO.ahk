@@ -1067,10 +1067,10 @@ LoadMainGui:
     Gui, Add, Picture, ggit w16 h16 X620 y10, bin/git.png
     Gui, Add, Picture, gcopy w16 h16 X645 y10, bin/discord.png
     Gui, Add, Picture, gminimize w16 h16 X670 y10, bin/Minimize.png
-    Gui, Add, Picture, gtest w32 h32 x10 y30, bin/tab/Treadmill.png
-    Gui, Add, Picture, gtest2 w32 h32 x10 y75, bin/tab/Weight.png
-    Gui, Add, Picture, gtest3 w32 h32 x10 y110, bin/tab/sp.png
-    Gui, Add, Picture, gtest4 w32 h32 x10 y155, bin/tab/ss.png
+    Gui, Add, Picture, gtest w32 h32 x10 y35, bin/tab/Treadmill.png
+    Gui, Add, Picture, gtest2 w32 h32 x10 y80, bin/tab/Weight.png
+    Gui, Add, Picture, gtest3 w32 h32 x10 y125, bin/tab/sp.png
+    Gui, Add, Picture, gtest4 w32 h32 x10 y170, bin/tab/ss.png
 
     Gui, Add, GroupBox,  x50 y30 w630 h250 vTreadmillTab, Treadmill's Option
 
