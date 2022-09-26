@@ -529,6 +529,8 @@ StartSP:
                     }
                     PixelSearch,,, 190, 130, 191, 131, 0x3A3A3A, 40, Fast ;enough stamina for sp gain
                     If (ErrorLevel = 0) {
+                        w := format("sc{:x}", getKeySC("w"))
+                        send {down up}{%w% up}
                         sc("w", 2)sc("s", 2)
                         If (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
                             SetTimer, sendrhythm, -300
@@ -975,15 +977,17 @@ runfunction(direction) {
 }
 siderunfunction(direction) {
     If (direction = 1) { ; a key
+        send, {down down}
         sc("w", 3)sc("w", 1)sc("a", 1)
-        send, {up}
         sleep 1000
         sc("w", 2)sc("a", 2)
+        send {down up}
     } else If (direction = 2) {
+        send, {down down}
         sc("w", 3)sc("w", 1)sc("d", 1)
-        send, {up}
         sleep 1000
         sc("w", 2)sc("d", 2)
+        send {down up}
     }
 }
 walkfunction(direction) {
@@ -1049,8 +1053,7 @@ sc(key,type) {
 }
 fwr() {
     w := format("sc{:x}", getKeySC("w"))
-    s := format("sc{:x}", getKeySC("s"))
-    SendInput, {%s% down}{%w%}{%w% down}
+    SendInput, {down down}{%w%}{%w% down}
 }
 ;; sub
 LoadMainGui:
@@ -1651,3 +1654,4 @@ cc=
 WinHttpReq.Send(cc)
 
 Return
+
