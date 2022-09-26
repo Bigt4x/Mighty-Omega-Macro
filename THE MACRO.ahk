@@ -163,8 +163,9 @@ StartTread:
                 Slot:="1,2,3,4,5,6,7,8,9,0"
                 Loop, Parse, Slot, `,
                 {
-                    Tooltip, %A_LoopField%
-                    Send %A_LoopField%
+                    scslot := format("sc{:x}", getKeySC(A_LoopField))
+                    ToolTip, % A_LoopField " " scslot
+                    Send {%scslot%}
                     Sleep 150
                     ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
                     If (ErrorLevel = 0) {
@@ -591,8 +592,9 @@ StartSP:
                 }
                 Loop, Parse, Slot, `,
                 {
-                    Tooltip, %A_LoopField%
-                    Send %A_LoopField%
+                    scslot := format("sc{:x}", getKeySC(A_LoopField))
+                    ToolTip, % A_LoopField " " scslot
+                    Send {%scslot%}
                     Sleep 150
                     ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
                     If (ErrorLevel = 0) {
@@ -1654,4 +1656,3 @@ cc=
 WinHttpReq.Send(cc)
 
 Return
-
