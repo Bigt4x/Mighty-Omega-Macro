@@ -519,6 +519,7 @@ StartSP:
                     TimerCheck:=A_TickCount-Timer
                     If (TimerCheck > 60000) {
                         ;; running too long inf stam?
+                        MsgBox, Your Stamina is freezing
                     }
                     ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
                     If (ErrorLevel = 0) {
@@ -530,8 +531,7 @@ StartSP:
                     PixelSearch,,, 190, 130, 191, 131, 0x3A3A3A, 40, Fast ;enough stamina for sp gain
                     If (ErrorLevel = 0) {
                         w := format("sc{:x}", getKeySC("w"))
-                        send {down up}{%w% up}
-                        sc("w", 2)sc("s", 2)
+                        SendInput, {%w% up}
                         If (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
                             SetTimer, sendrhythm, -300
                         }
@@ -1053,7 +1053,7 @@ sc(key,type) {
 }
 fwr() {
     w := format("sc{:x}", getKeySC("w"))
-    SendInput, {down down}{%w%}{%w% down}
+    SendInput, {down down}{up down}{%w%}{%w% down}{up up}{down up}
 }
 ;; sub
 LoadMainGui:
@@ -1083,7 +1083,7 @@ LoadMainGui:
 
     Gui, Add, Text,xm+250 ym+50 vtext4,Duration Options?
     Gui, Add, DropDownList,vTD ,Macro Indefinitely|Fatigue estimate
-    Gui, Add, Text, vtext5,What's Your Stamina Amount?
+    Gui, Add, Text, vtext   5,What's Your Stamina Amount?
     Gui, Add, DropDownList, vTA ,High|Medium|Low
 
     ;; advance
