@@ -1169,6 +1169,8 @@ LoadMainGui:
     Gui, Add, Checkbox, vSSAAC ,Auto Clip 
     Gui, Add, Checkbox, vSSAAL ,Auto Leave 
     Gui, Add, Button,xm+321 ym+240 v4button gStartSS ,Done ;; start button
+
+    Gui, Add, Text, x140 y8, Version 2.0.1
 Return
 SubmitWebhook:
     Gui, Submit
