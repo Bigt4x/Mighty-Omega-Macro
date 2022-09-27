@@ -506,7 +506,6 @@ StartSP:
                 Send {BackSpace}
                 Sleep 100
                 Send 1
-                
                 ;; run part 
                 Send {Space} ; check 
                 sc("w", 2) ; w up
@@ -551,8 +550,8 @@ StartSP:
             Click, Right
             ;; low stam timer check
             STAMCHECK:=A_TickCount-HUH
-            If (STAMCHECK > 240000) {
-                ;; been punching nonstop for over 4 minute can be inf stamina? ;; might be unequip combat
+            If (STAMCHECK > 300000) { ; 5 minute
+                ;; been punching nonstop for over 5 minute can be inf stamina? ;; might be unequip combat
                 MsgBox, Your Stamina is freezing
             }
         } else If (ErrorLevel = 2) {
@@ -582,7 +581,7 @@ StartSP:
         If (SPE != "None") {
             PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast ; Hungry
             If (ErrorLevel = 0) {
-                Send {Shift}{BackSpace}
+                Send {BackSpace}
                 Sleep 200
                 If (SPAWS = 1) or (eat = 2) {
                     Slot:="3,4,5,6,7,8,9,0"
@@ -601,13 +600,12 @@ StartSP:
                         {
                             PixelSearch,,, 119, 144, 110, 146, 0x3A3A3A, 40, Fast ; if the hunger isn't full
                             If (ErrorLevel = 0) {
-                                Click, 405, 620
+                                Click
                                 ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
                                 If (ErrorLevel = 1) {
                                     Break
                                 }
                             } else If (ErrorLevel = 1) {
-                                
                                 Break
                             }
                             ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
@@ -632,7 +630,6 @@ StartSP:
                             }
                             ;; Combat
                         }
-                        Send {Shift}
                         HUH:=A_TickCount 
                         Goto, re
                     }
@@ -651,6 +648,7 @@ StartSP:
                     ExitApp
                 } else If (SPE = "Slot+Inventory") {
                     sc("``", 1)sc("``", 2)  ;open inv
+                    Send {Shift}
                     MouseMove, 100, 480
                     Sleep 600
                     xx=95
@@ -1548,10 +1546,13 @@ Waitforcombat:
             }
             ImageSearch,,, 670, 45, 755, 55, *5 bin\Common use\gripped.bmp
             If (ErrorLevel = 0) {
-                Tooltip, Gripped, 650, 600
+                WinHttpReq.Send(DiscordSend("You are gripped. Auto Log in 10 Seconds", UserID))
+                Sleep 10000
+                Process, Close, RobloxPlayerBeta.exe
                 Return
             }
         } 
+        
     }
     CombatTask := A_TickCount
     Loop,
@@ -1564,9 +1565,8 @@ Waitforcombat:
     } Until A_TickCount - CombatTask > 5000
     tooltip, Combat Is Gone
     If (Webhook1 = true) {
-        WinHttpReq.Send(DiscordSend("Combat is gone",UserID))
+        WinHttpReq.Send(DiscordSend("Combat is gone`, resumed macroing. Please check if you are in correct position",UserID))
     }
-    MsgBox, Stopped
 Return
 Combat1:
     Random, oVar, 1, 2
