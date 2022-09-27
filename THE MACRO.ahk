@@ -315,9 +315,8 @@ StartTread:
                     {
                         If (TL = A_LoopField) {
                             y:=y(A_LoopField)
-                            tooltip, y = %y%, 650,600
                             Click, 470, %y%, 10
-                            Tooltip, Choose %A_LoopField%, 650, 600
+                            Msgbox, Choose %A_LoopField% y = %y%, 650, 600
                             Sleep 100
                             Break
                         }
@@ -955,18 +954,18 @@ sendsc(keyspe) {
     send {%thatkey%}
 }
 y(var) {
-    if (var = 6) {
+    if (var = "6") {
         y = 400
-    } else if (var = 5) {
+    } else if (var = "5") {
         y = 370
-    } else if (var = 4) {
+    } else if (var = "4") {
         y = 340
-    } else if (var = 3) {
+    } else if (var = "3") {
+        y = 310
+    } else if (var = "2") {
         y = 280
-    } else if (var = 2) {
+    } else if (var = "1") {
         y = 250
-    } else if (var = 1) {
-        y = 220
     }
     return y
 }
