@@ -881,11 +881,11 @@ StartSS:
             ;; activate
             Send {BackSpace}
             Sleep 100
-            Send 2
+            sendsc("2")
             Sleep 100
             Click
             Sleep 3000
-            Send 1
+            sendsc("1")
             mone = 0
             Loop,
             {
@@ -926,8 +926,9 @@ Return
 ;; function
 
 WM_LBUTTONDOWN() {
-    If A_Gui
+    If (A_Gui) {
         PostMessage, 0xA1, 2
+    }
 }
 GetUrlStatus( URL, Timeout = -1 ) {
     ComObjError(0)
@@ -1085,7 +1086,7 @@ LoadMainGui:
 
     Gui, Add, Text,xm+250 ym+50 vtext4,Duration Options?
     Gui, Add, DropDownList,vTD ,Macro Indefinitely|Fatigue estimate
-    Gui, Add, Text, vtext   5,What's Your Stamina Amount?
+    Gui, Add, Text, vtext5,What's Your Stamina Amount?
     Gui, Add, DropDownList, vTA ,High|Medium|Low
 
     ;; advance
@@ -1098,7 +1099,8 @@ LoadMainGui:
     Gui, Add, Checkbox, vTAAC ,Auto Clip 
     Gui, Add, Checkbox, vTAAL ,Auto Leave 
 
-    Gui, Add, Button,xm+321 ym+240 vbutton gStartTread ,Done ;; start button
+    Gui, Add, Button,xm+321 ym+240 vbutton gStartTread ,Done 
+    ;; start button
 
     ;; - - - end treadmill gui
 
@@ -1121,7 +1123,8 @@ LoadMainGui:
     Gui, Add, Checkbox, vWAAC ,Auto Clip 
     Gui, Add, Checkbox, vWAAL ,Auto Leave 
 
-    Gui, Add, Button,xm+321 ym+240 v2button gStartWeight ,Done ;; start button
+    Gui, Add, Button,xm+321 ym+240 v2button gStartWeight ,Done 
+    ;; start button
     ;;; end weight
 
 
@@ -1148,7 +1151,8 @@ LoadMainGui:
     ;; strike speed
     Gui, Add, GroupBox,  x50 y30 w630 h250 vSSTab, Strike Speed's Option
     Gui, Add, Text, xm+55 ym+50 vvvvtext1,Training Type
-    Gui, Add, DropDownList, vSST,Stand in place|Karate|Capoeira ;; no saved option cuz it has only 1
+    Gui, Add, DropDownList, vSST,Stand in place|Karate|Capoeira 
+    ;; no saved option cuz it has only 1
     Gui, Add, Text, vvvvtext5 ,Walking Path
     Gui, Add, DropDownList, vSSP,Default|Custom
     Gui, Add, Text, xm+250 ym+50 vvvvtext3 ,Duration Options?
@@ -1161,9 +1165,6 @@ LoadMainGui:
     Gui, Add, Checkbox, vSSAAC ,Auto Clip 
     Gui, Add, Checkbox, vSSAAL ,Auto Leave 
     Gui, Add, Button,xm+321 ym+240 v4button gStartSS ,Done ;; start button
-
-
-    ;; vvvvtext1,vvvvtext2,vvvvtext3,vvvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button
 Return
 SubmitWebhook:
     Gui, Submit
