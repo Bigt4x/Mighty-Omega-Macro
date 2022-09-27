@@ -316,7 +316,7 @@ StartTread:
                         If (TL = A_LoopField) {
                             y:=y(A_LoopField)
                             Click, 470, %y%, 10
-                            Msgbox, Choose %A_LoopField% y = %y%, 650, 600
+                            ToolTip, Choose %A_LoopField% y = %y%, 650, 600
                             Sleep 100
                             Break
                         }
