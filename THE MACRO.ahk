@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
-currentversion:= "2.0.4"
+currentversion:= "2.0.5"
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
 whr.Send()
@@ -45,6 +45,7 @@ If !FileExist("settings.ini") {
         Gosub, CreateWebhookGui
         Return
     } else {
+        Webhook1 = true
         Goto, main
     }
 }
@@ -56,7 +57,7 @@ $l::ExitApp
 
 main:
 {
-    if (Webhook1 = true) { ;; making thing ready
+    if (Webhook1 := true) { ;; making thing ready
         WinHttpReq := ComObjCreate("WinHttp.WinHttpRequest.5.1")
         WinHttpReq.Open("POST", Webhook, true)
         WinHttpReq.SetRequestHeader("Content-Type", "application/json")
@@ -227,7 +228,7 @@ StartTread:
                     }
                 } ;; after not found anything
                 If (TE = "SlotEat") {
-                    If (Webhook1 = true) {
+                    If (Webhook1 := true) {
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                         If (TAAL = 1) {
                             Sleep 10000
@@ -255,7 +256,7 @@ StartTread:
                             xx:=xx+70
                         } else If (ErrorLevel = 1) {
                             If (A_Index = 1) {
-                                If (Webhook1 = true) {
+                                If (Webhook1 := true) {
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
                                 ExitApp
@@ -313,7 +314,7 @@ StartTread:
                             Break
                         } else If (ErrorLevel = 1) {
                             If (A_Index = 5) {
-                                If (Webhook1 = true) {
+                                If (Webhook1 := true) {
                                     WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID))
                                 } else if (Webhook1 = false) {
                                     MsgBox, Not Found ;; Send Webhook and stop
@@ -649,7 +650,7 @@ StartSP:
                     }
                 } ;; after not found anything
                 If (SPE = "SlotEat") {
-                    If (Webhook1 = true) {
+                    If (Webhook1 := true) {
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                         If (SPAAL = 1) {
                             Sleep 10000
@@ -679,7 +680,7 @@ StartSP:
                             xx:=xx+70
                         } else If (ErrorLevel = 1) {
                             If (A_Index = 1) {
-                                If (Webhook1 = true) {
+                                If (Webhook1 := true) {
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
                                 ExitApp
@@ -741,7 +742,7 @@ StartWeight:
                             Break
                         } else If (ErrorLevel = 1) {
                             If (A_Index = 5) {
-                                If (Webhook1 = true) {
+                                If (Webhook1 := true) {
                                     WinHttpReq.Send(DiscordSend("You are pushed away from Weight",UserID))
                                 } else if (Webhook1 = false) {
                                     MsgBox, Not Found ;; Send Webhook and stop
@@ -923,6 +924,8 @@ StartSS:
         StrikeSpeedSS:="|<>0x242424@0.66$62.zzzzzzzzzzsTyrzwDzzzqyzxzzTzzzxja/ODrkllkQPiphyBphhbqvgMTvR33RxivKzyrLrqMNiqVwAAAA7zzzzzzTzzzzzzzzzrzzzzzzzzzzzzzzzs7zjxzzzzzzrzzzzzzzzzxWCkq63zzzzPxhhhgzzzzqsPPPPjzzzxhqqqqnzzzzPVhhhUzzzzzzzzzzTzzzzzzzzy7zzzzzzzzzzzzU"
         if (ok:=FindText(X, Y, 1200-150000, 717-150000, 1200+150000, 717+150000, 0, 0, StrikeSpeedSS))
         {
+            SSTASK := A_TickCount
+            Error = 0
             w := format("sc{:x}", getKeySC("w"))
             a := format("sc{:x}", getKeySC("a"))
             s := format("sc{:x}", getKeySC("s"))
@@ -1017,17 +1020,6 @@ StartSS:
             Loop,
             {
                 MouseMove, mousex, mousey, 0
-                if (mone < 5) {
-                    Click
-                    mone++
-                }
-                if (mone = 5) {
-                    mone = 0
-                    Click, Right
-                }
-
-                Sleep 1000
-
                 t1:=A_TickCount, StrikeSpeedSS:=X:=Y:=""
                 StrikeSpeedSS:="|<>0x242424@0.66$62.zzzzzzzzzzsTyrzwDzzzqyzxzzTzzzxja/ODrkllkQPiphyBphhbqvgMTvR33RxivKzyrLrqMNiqVwAAAA7zzzzzzTzzzzzzzzzrzzzzzzzzzzzzzzzs7zjxzzzzzzrzzzzzzzzzxWCkq63zzzzPxhhhgzzzzqsPPPPjzzzxhqqqqnzzzzPVhhhUzzzzzzzzzzTzzzzzzzzy7zzzzzzzzzzzzU"
                 if (ok:=FindText(X, Y, 1200-150000, 717-150000, 1200+150000, 717+150000, 0, 0, StrikeSpeedSS)) {
@@ -1036,11 +1028,24 @@ StartSS:
                     total:=A_Index
                     Break
                 }
+                ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
+                If (ErrorLevel = 0) {
+                    Gosub, Waitforcombat
+                }
                 If (A_Index >= 50) { ;; M1 over 50 time can be break
                     MsgBox, You have been pushed
                     ;; webhook
                     ExitApp
                 } 
+                if (mone < 5) {
+                    Click
+                    mone++
+                }
+                if (mone = 5) {
+                    mone = 0
+                    Click, Right
+                }
+                Sleep 1000
                 ;; Combat
             }
             Send {BackSpace}
@@ -1115,11 +1120,58 @@ StartSS:
                     Send {%w% Up}
                 }
             }
+            TimeTotal := A_TickCount - SSTASK
+            ;; convert ms to sec
+            count++
+            If (SSALT = 1) AND (Webhook1 := true) {
+                cc=
+                (
+                    {
+                        "username":"i love vivace's macro",
+                        "content": null,
+                        "embeds": [
+                            {
+                                "title": "STRIKE SPEED | %SST% | TOTAL RUNS: %count%!",
+                                "color": null,
+                                "fields": [
+                                    {
+                                        "name": "Time Taken",
+                                        "value": "``%TimeTotal%ms``",
+                                        "inline": true
+                                    },
+                                    {
+                                        "name": "M1 Done",
+                                        "value": "``%total%``",
+                                        "inline": true
+                                    },
+                                    {
+                                        "name": "Total",
+                                        "value": "``%count%``",
+                                        "inline": true
+                                    }
+                                ]
+                            }
+                        ],
+                        "attachments": []
+                    }
+                )
+                WinHttpReq.Send(cc)
+                ToolTip, Send Log
+            }
         } else {
             Send {BackSpace}
             Click, %mousex%, %mousey%
             tooltip, not Found, 650, 600
             Sleep 100 
+            Error++
+            If (Error > 30) {
+                ;; Pushed Away
+
+            }
+        }
+        ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
+        If (ErrorLevel = 0) {
+            Gosub, Waitforcombat
         }
 
         ;; combat tag 
@@ -1352,7 +1404,7 @@ LoadMainGui:
     ;; strike speed
     Gui, Add, GroupBox,  x50 y30 w630 h250 vSSTab, Strike Speed's Option
     Gui, Add, Text, xm+55 ym+50 vvvvtext1,Training Type
-    Gui, Add, DropDownList, vSST,Stand In Place|Karate|Capoeira|Muay Thai|Advance Brawl|Boxing
+    Gui, Add, DropDownList, vSST,Kung fu|Kure|Taekwondo|Karate|Capoeira|Muay Thai|Advance Brawl|Boxing
     ;; no saved option cuz it has only 1
     Gui, Add, Text, vvvvtext5 ,Walking Path
     Gui, Add, DropDownList, vSSP,Default|Custom
@@ -1479,7 +1531,7 @@ LoadData:
 
     ;;STRIKESPEED
     ; SSP = Walking Path
-    ; SST = Walking Type
+    ; SST = Walking Type ;// Gym
     ; SSE = Eat options
     ; SSD = Duration
     IniRead, SSP, settings.ini, StrikeSpeed, SSP
@@ -1718,7 +1770,7 @@ Return
 Waitforcombat:
     ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
     If (ErrorLevel = 0) {
-        If (Webhook1 = true) {
+        If (Webhook1 := true) {
             WinHttpReq.Send(DiscordSend("You are attacked`, Start Emergency Function",UserID))
         }
         tooltip found combat, 650, 600
@@ -1759,7 +1811,7 @@ Waitforcombat:
         tooltip, Combat Is Gone, 650, 600
     } Until A_TickCount - CombatTask > 5000
     tooltip, Combat Is Gone, 650, 600
-    If (Webhook1 = true) {
+    If (Webhook1 := true) {
         WinHttpReq.Send(DiscordSend("Combat is gone`, resumed macroing. Please check if you are in correct position",UserID))
     }
 Return
