@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
-currentversion:= "2.0.2"
+currentversion:= "2.0.3"
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
 whr.Send()
@@ -862,29 +862,59 @@ StartSS:
             Gosub, Recordstuff
         }
     }
+    If (SSP = "Custom") {
+        If (SST = "Karate") { ;Karate|Capoeira|Muay Thai|Advance Brawl|Boxing 
+            InputBox, path1, Vivace's Macro,Karate 1st Custom Walk Distance (Default: 960ms),, 400, 130
+            If (ErrorLevel = 1) {
+                msgbox,,Vivace's Macro,Set to default
+                path1 = 960
+            }
+            InputBox, path2, Vivace's Macro,Karate 2nd Custom Walk Distance (Default: 660ms),, 400, 130
+            If (ErrorLevel = 1) {
+                msgbox,,Vivace's Macro,Set to default
+                path1 = 660
+            }
+        }
+        If (SST = "Capoeira") {
+            InputBox, path1, Vivace's Macro,Capoeira 1st Custom Walk Distance (Default: 1300ms),, 400, 130
+            If (ErrorLevel = 1) {
+                msgbox,,Vivace's Macro,Set to default
+                path1 = 1300
+            }
+        }
+        If (SST = "Muay Thai") {
+            InputBox, path1, Vivace's Macro,Muay Thai 1st Custom Walk Distance (Default: 1100ms),, 400, 130
+            If (ErrorLevel = 1) {
+                msgbox,,Vivace's Macro,Set to default
+                path1 = 1100
+            }
+        }
+        If (SST = "Advance Brawl") {
+            InputBox, path1, Vivace's Macro,Advance Brawl 1st Custom Walk Distance (Default: 1800ms),, 400, 130
+            If (ErrorLevel = 1) {
+                msgbox,,Vivace's Macro,Set to default
+                path1 = 1800
+            }
+        }
+        If (SST = "Boxing") {
+            InputBox, path1, Vivace's Macro,Boxing 1st Custom Walk Distance (Default: 820ms),, 400, 130
+            If (ErrorLevel = 1) {
+                msgbox,,Vivace's Macro,Set to default
+                path1 = 820
+            }
+            InputBox, path2, Vivace's Macro,Boxing 2nd Custom Walk Distance (Default: 580ms),, 400, 130
+            If (ErrorLevel = 1) {
+                msgbox,,Vivace's Macro,Set to default
+                path1 = 580
+            }
+        }
+    }
     Gosub, Check
     ToolTip, Place your mouse at Strike Speed Pad then press K, 650, 600
     Pause
     ToolTip
     MouseGetPos, mousex, mousey
-    If (SSP = "Custom") {
-        If (SST = "Karate") { ;Karate|Capoeira|Muay Thai|Advance Brawl|Boxing 
-            InputBox, path1 , Vivace's Macro,Karate 1st Custom Walk Distance (Default: 960ms),, 250, 160
-
-        }
-        If (SST = "Capoeira") {
-
-        }
-        If (SST = "Muay Thai") {
-
-        }
-        If (SST = "Advance Brawl") {
-
-        }
-        If (SST = "Boxing") {
-
-        }
-    }
+    
     Loop,
     {
         Gosub, Check
@@ -1338,7 +1368,7 @@ LoadMainGui:
     Gui, Add, Checkbox, vSSAAC ,Auto Clip 
     Gui, Add, Checkbox, vSSAAL ,Auto Leave 
     Gui, Add, Button,xm+321 ym+240 v4button gStartSS ,Done ;; start button
-    Gui, Add, Text, x140 y8, Version 2.0.1
+    Gui, Add, Text, x140 y8, Version %currentversion%
 Return
 SubmitWebhook:
     Gui, Submit
