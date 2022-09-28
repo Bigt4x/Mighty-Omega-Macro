@@ -1,6 +1,20 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
+currentversion:= "2.0.2"
+whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
+whr.Send()
+; Using 'true' above and the call below allows the script to remain responsive.
+whr.WaitForResponse()
+version := whr.ResponseText
+if (version != currentversion) {
+    MsgBox, 51, Update Check, A new version of Vivace's Macro is avalable.`n`nCurrent Version: %currentversion%`nLastest Version: %version%`n`nVisit download page?
+    IfMsgBox, Yes
+    {
+        run, https://github.com/Cweamy/Mighty-Omega-Macro
+    }
+}
 MsgBox, K is Pause L is Exit
 If (A_ScreenDPI != 96) { ;; checking scale and layout
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
@@ -164,7 +178,7 @@ StartTread:
                 Loop, Parse, Slot, `,
                 {
                     scslot := format("sc{:x}", getKeySC(A_LoopField))
-                    ToolTip, % A_LoopField " " scslot
+                    ToolTip, % A_LoopField " " scslot, 650, 600
                     Send {%scslot%}
                     Sleep 150
                     ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
@@ -469,7 +483,7 @@ StartSP:
     Sleep 100
     Send 1{Shift}
     Sleep 100
-    Tooltip, Please Have Shift Lock On
+    Tooltip, Please Have Shift Lock On, 650, 600
     SetTimer, RMT , -3000
     Loop,
     {
@@ -591,7 +605,7 @@ StartSP:
                 Loop, Parse, Slot, `,
                 {
                     scslot := format("sc{:x}", getKeySC(A_LoopField))
-                    ToolTip, % A_LoopField " " scslot
+                    ToolTip, % A_LoopField " " scslot, 650, 600
                     Send {%scslot%}
                     Sleep 150
                     ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
@@ -849,41 +863,124 @@ StartSS:
         }
     }
     Gosub, Check
-    ToolTip, Place your mouse at Strike Speed Pad then press K
+    ToolTip, Place your mouse at Strike Speed Pad then press K, 650, 600
     Pause
     ToolTip
     MouseGetPos, mousex, mousey
-    
+    If (SSP = "Custom") {
+        If (SST = "Karate") { ;Karate|Capoeira|Muay Thai|Advance Brawl|Boxing 
+            InputBox, path1 , Vivace's Macro,Karate 1st Custom Walk Distance (Default: 960ms),, 250, 160
+
+        }
+        If (SST = "Capoeira") {
+
+        }
+        If (SST = "Muay Thai") {
+
+        }
+        If (SST = "Advance Brawl") {
+
+        }
+        If (SST = "Boxing") {
+
+        }
+    }
     Loop,
     {
         Gosub, Check
-        tooltip, %A_Index%
+        tooltip, %A_Index%, 650, 600
         t1:=A_TickCount, StrikeSpeedSS:=X:=Y:=""
         StrikeSpeedSS:="|<>0x242424@0.66$62.zzzzzzzzzzsTyrzwDzzzqyzxzzTzzzxja/ODrkllkQPiphyBphhbqvgMTvR33RxivKzyrLrqMNiqVwAAAA7zzzzzzTzzzzzzzzzrzzzzzzzzzzzzzzzs7zjxzzzzzzrzzzzzzzzzxWCkq63zzzzPxhhhgzzzzqsPPPPjzzzxhqqqqnzzzzPVhhhUzzzzzzzzzzTzzzzzzzzy7zzzzzzzzzzzzU"
         if (ok:=FindText(X, Y, 1200-150000, 717-150000, 1200+150000, 717+150000, 0, 0, StrikeSpeedSS))
         {
+            w := format("sc{:x}", getKeySC("w"))
+            a := format("sc{:x}", getKeySC("a"))
+            s := format("sc{:x}", getKeySC("s"))
+            d := format("sc{:x}", getKeySC("d"))
             ;; Waling path
+            If (SST = "Boxing") { 
+                If (SSP = "Custom") {
+                    ;; walking
+                    Send {Shift}{%d% Down}
+                    Sleep %path1%
+                    Send {%d% Up}{%w% Down}
+                    Sleep %path2%
+                    Send {%w% Up}{Shift}
+                } else If (SSP = "Default") {
+                    Send {Shift}{%d% Down}
+                    Sleep 820
+                    Send {%d% Up}{%w% Down}
+                    Sleep 580
+                    Send {%w% Up}{Shift}
+                }
+            }
+            If (SST = "Muay Thai") {
+                If (SSP = "Custom") {
+                    ;; walking
+                    Send {Shift}{%w% Down}
+                    Sleep %path1%
+                    Send {%w% Up}{Shift}
+                } else If (SSP = "Default") {
+                    Send {Shift}{%w% Down}
+                    Sleep 1100
+                    Send {%w% Up}{Shift}
+                }
+            }
+            If (SST = "Advance Brawl") {
+                If (SSP = "Custom") {
+                    ;; walking
+                    Send {Shift}{%d% Down}
+                    Sleep %path1%
+                    Send {%d% Up}{Shift}
+                } else If (SSP = "Default") {
+                    Send {Shift}{%d% Down}
+                    Sleep 1800
+                    Send {%d% Up}{Shift}
+                }
+            }
             If (SST = "Karate") {
                 If (SSP = "Custom") {
                     ;; walking
-
+                    Send {Shift}
+                    Send {%d% Down}
+                    Sleep %path1%
+                    Send {%d% Up}{%w% Down}
+                    Sleep %path2%
+                    Send {%w% Up}
+                    Send {Shift}
                 } else If (SSP = "Default") {
-                    
+                    Send {Shift}
+                    Send {%d% Down}
+                    Sleep 960
+                    Send {%d% Up}{%w% Down}
+                    Sleep 660
+                    Send {%w% Up}
+                    Send {Shift}
                 }
             }
             If (SST = "Capoeira") {
                 If (SSP = "Custom") {
-
+                    Send {%s% Down}
+                    Sleep %path1%
+                    Send {%s% Up}{%d% Down}
+                    Sleep 80
+                    Send {%d% Up}
                 } else If (SSP = "Default") {
-
+                    Send {%s% Down}
+                    Sleep 1300
+                    Send {%s% Up}{%d% Down}
+                    Sleep 80
+                    Send {%d% Up}
                 }
             }
+
             ;; activate
             Send {BackSpace}
             Sleep 100
             sendsc("2")
             Sleep 100
             Click
+            Sleep 50
             Sleep 3000
             sendsc("1")
             mone = 0
@@ -899,27 +996,99 @@ StartSS:
                     Click, Right
                 }
 
-                Sleep 1100
+                Sleep 1000
+
                 t1:=A_TickCount, StrikeSpeedSS:=X:=Y:=""
                 StrikeSpeedSS:="|<>0x242424@0.66$62.zzzzzzzzzzsTyrzwDzzzqyzxzzTzzzxja/ODrkllkQPiphyBphhbqvgMTvR33RxivKzyrLrqMNiqVwAAAA7zzzzzzTzzzzzzzzzrzzzzzzzzzzzzzzzs7zjxzzzzzzrzzzzzzzzzxWCkq63zzzzPxhhhgzzzzqsPPPPjzzzxhqqqqnzzzzPVhhhUzzzzzzzzzzTzzzzzzzzy7zzzzzzzzzzzzU"
-                if (ok:=FindText(X, Y, 1200-150000, 717-150000, 1200+150000, 717+150000, 0, 0, StrikeSpeedSS))
-                {
-                    Tooltip, Found ss %A_Index%
-                } Else {
+                if (ok:=FindText(X, Y, 1200-150000, 717-150000, 1200+150000, 717+150000, 0, 0, StrikeSpeedSS)) {
+                    Tooltip, Found ss %A_Index%, 650, 600
+                } else {
                     total:=A_Index
                     Break
                 }
                 If (A_Index >= 50) { ;; M1 over 50 time can be break
                     MsgBox, You have been pushed
+                    ;; webhook
                     ExitApp
                 } 
                 ;; Combat
             }
             Send {BackSpace}
+            If (SST = "Boxing") {
+                If (SSP = "Custom") {
+                    ;; walking
+                    Send {Shift}{%s% Down}
+                    Sleep %path2%
+                    Send {%s% Up}{%a% Down}
+                    Sleep %path1%
+                    Send {%a% Up}{Shift}
+                } else If (SSP = "Default") {
+                    Send {Shift}{%s% Down}
+                    Sleep 580
+                    Send {%s% Up}{%a% Down}
+                    Sleep 820
+                    Send {%a% Up}{Shift}
+                }
+            }
+            If (SST = "Muay Thai") {
+                If (SSP = "Custom") {
+                    ;; walking
+                    Send {Shift}{%s% Down}
+                    Sleep %path1%
+                    Send {%s% Up}{Shift}
+                } else If (SSP = "Default") {
+                    Send {Shift}{%s% Down}
+                    Sleep 1100
+                    Send {%s% Up}{Shift}
+                }
+            }
+            If (SST = "Advance Brawl") {
+                If (SSP = "Custom") {
+                    ;; walking
+                    Send {Shift}{%a% Down}
+                    Sleep %path1%
+                    Send {%a% Up}{Shift}
+                } else If (SSP = "Default") {
+                    Send {Shift}{%a% Down}
+                    Sleep 1800
+                    Send {%a% Up}{Shift}
+                }
+            }
+            If (SST = "Karate") {
+                If (SSP = "Custom") {
+                    ;; walking
+                    Send {Shift}{%s% Down}
+                    Sleep %path2%
+                    Send {%s% Up}{%a% Down}
+                    Sleep %path1%
+                    Send {%a% Up}{Shift}
+                } else If (SSP = "Default") {
+                    Send {Shift}{%s% Down}
+                    Sleep 660
+                    Send {%s% Up}{%a% Down}
+                    Sleep 960
+                    Send {%a% Up}{Shift}
+                }
+            }
+            If (SST = "Capoeira") {
+                If (SSP = "Custom") {
+                    Send {%a% Down}
+                    Sleep 80
+                    Send {%a% Up}{%w% Down}
+                    Sleep %path1%
+                    Send {%w% Up}
+                } else If (SSP = "Default") {
+                    Send {%a% Down}
+                    Sleep 80
+                    Send {%a% Up}{%w% Down}
+                    Sleep 1300
+                    Send {%w% Up}
+                }
+            }
         } else {
             Send {BackSpace}
             Click, %mousex%, %mousey%
-            tooltip, not Found
+            tooltip, not Found, 650, 600
             Sleep 100 
         }
 
@@ -1155,7 +1324,7 @@ LoadMainGui:
     ;; strike speed
     Gui, Add, GroupBox,  x50 y30 w630 h250 vSSTab, Strike Speed's Option
     Gui, Add, Text, xm+55 ym+50 vvvvtext1,Training Type
-    Gui, Add, DropDownList, vSST,Stand in place|Karate|Capoeira 
+    Gui, Add, DropDownList, vSST,Stand In Place|Karate|Capoeira|Muay Thai|Advance Brawl|Boxing
     ;; no saved option cuz it has only 1
     Gui, Add, Text, vvvvtext5 ,Walking Path
     Gui, Add, DropDownList, vSSP,Default|Custom
@@ -1169,7 +1338,6 @@ LoadMainGui:
     Gui, Add, Checkbox, vSSAAC ,Auto Clip 
     Gui, Add, Checkbox, vSSAAL ,Auto Leave 
     Gui, Add, Button,xm+321 ym+240 v4button gStartSS ,Done ;; start button
-
     Gui, Add, Text, x140 y8, Version 2.0.1
 Return
 SubmitWebhook:
@@ -1528,7 +1696,7 @@ Waitforcombat:
         If (Webhook1 = true) {
             WinHttpReq.Send(DiscordSend("You are attacked`, Start Emergency Function",UserID))
         }
-        tooltip found combat
+        tooltip found combat, 650, 600
         Loop,
         {
             Sleep 30
@@ -1565,7 +1733,7 @@ Waitforcombat:
         }
         tooltip, Combat Is Gone, 650, 600
     } Until A_TickCount - CombatTask > 5000
-    tooltip, Combat Is Gone
+    tooltip, Combat Is Gone, 650, 600
     If (Webhook1 = true) {
         WinHttpReq.Send(DiscordSend("Combat is gone`, resumed macroing. Please check if you are in correct position",UserID))
     }
