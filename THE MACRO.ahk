@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
-currentversion:= "2.0.3"
+currentversion:= "2.0.4"
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
 whr.Send()
@@ -872,7 +872,7 @@ StartSS:
             InputBox, path2, Vivace's Macro,Karate 2nd Custom Walk Distance (Default: 660ms),, 400, 130
             If (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
-                path1 = 660
+                path2 = 660
             }
         }
         If (SST = "Capoeira") {
@@ -905,7 +905,7 @@ StartSS:
             InputBox, path2, Vivace's Macro,Boxing 2nd Custom Walk Distance (Default: 580ms),, 400, 130
             If (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
-                path1 = 580
+                path2 = 580
             }
         }
     }
@@ -1145,7 +1145,6 @@ DiscordSend(m,p) {
     postdata={"username":"i love vivace's macro","content":"%p% %m%"}
     Return postdata
 }
-
 sendsc(keyspe) {
     thatkey := format("sc{:x}", getKeySC(keyspe))
     send {%thatkey%}
@@ -1222,7 +1221,6 @@ sidewalkfunction(direction) {
         sc("d", 2)
     }
 }
-
 dash(direction) {
     if (direction = 1) { ;; 4 direction
         sc("w", 1)
@@ -1665,9 +1663,6 @@ WaitWeight:
         }
     }
 Return
-
-
-
 RMT:
     tooltip
 Return
@@ -1818,60 +1813,6 @@ findc:
         Gosub, Waitforcombat
     }
 Return
-; ok:=FindText(X:="wait", Y:=3, 0,0,0,0,0,0,Text)    ; Wait 3 seconds for appear
-; ok:=FindText(X:="wait0", Y:=-1, 0,0,0,0,0,0,Text)  ; Wait indefinitely for disappear
-
-
-
-;===== Copy The Following Functions To Your Own Code Just once =====
-
-
-;--------------------------------
-;  FindText - Capture screen image into text and then find it
-;--------------------------------
-;  returnArray := FindText(
-;      OutputX --> The name of the variable used to store the returned X coordinate
-;    , OutputY --> The name of the variable used to store the returned Y coordinate
-;    , X1 --> the search scope's upper left corner X coordinates
-;    , Y1 --> the search scope's upper left corner Y coordinates
-;    , X2 --> the search scope's lower right corner X coordinates
-;    , Y2 --> the search scope's lower right corner Y coordinates
-;    , err1 --> Fault tolerance percentage of text       (0.1=10%)
-;    , err0 --> Fault tolerance percentage of background (0.1=10%)
-;    , Text --> can be a lot of text parsed into images, separated by "|"
-;    , ScreenShot --> if the value is 0, the last screenshot will be used
-;    , FindAll --> if the value is 0, Just find one result and return
-;    , JoinText --> if you want to combine find, it can be 1, or an array of words to find
-;    , offsetX --> Set the max text offset (X) for combination lookup
-;    , offsetY --> Set the max text offset (Y) for combination lookup
-;    , dir --> Nine directions for searching: up, down, left, right and center
-;    , zoomW --> Zoom percentage of image width  (1.0=100%)
-;    , zoomH --> Zoom percentage of image height (1.0=100%)
-;  )
-;
-;  The function returns a second-order array containing
-;  all lookup results, Any result is an associative array
-;  {1:X, 2:Y, 3:W, 4:H, x:X+W//2, y:Y+H//2, id:Comment}
-;  if no image is found, the function returns 0.
-;  All coordinates are relative to Screen, colors are in RGB format
-;
-;  If the return variable is set to "ok", ok[1] is the first result found.
-;  ok[1][1], ok[1][2] is the X, Y coordinate of the upper left corner of the found image,
-;  ok[1][3] is the width of the found image, and ok[1][4] is the height of the found image,
-;  ok[1].x <==> ok[1][1]+ok[1][3]//2 ( is the Center X coordinate of the found image ),
-;  ok[1].y <==> ok[1][2]+ok[1][4]//2 ( is the Center Y coordinate of the found image ),
-;  ok[1].id is the comment text, which is included in the <> of its parameter.
-;
-;  If OutputX is equal to "wait" or "wait1"(appear), or "wait0"(disappear)
-;  it means using a loop to wait for the image to appear or disappear.
-;  the OutputY is the wait time in seconds, time less than 0 means infinite waiting
-;  Timeout means failure, return 0, and return other values means success
-;  If you want to appear and the image is found, return the found array object
-;  If you want to disappear and the image cannot be found, return 1
-;  Example 1: FindText(X:="wait", Y:=3, 0,0,0,0,0,0,Text)   ; Wait 3 seconds for appear
-;  Example 2: FindText(X:="wait0", Y:=-1, 0,0,0,0,0,0,Text) ; Wait indefinitely for disappear
-;--------------------------------
-
 FindText(ByRef x:="FindTextClass", ByRef y:="", args*)
 {
   global FindTextClass
@@ -2708,9 +2649,7 @@ ASCII(s)
   return s
 }
 
-; You can put the text library at the beginning of the script,
-; and Use FindText().PicLib(Text,1) to add the text library to PicLib()'s Lib,
-; Use FindText().PicLib("comment1|comment2|...") to get text images from Lib
+
 
 PicLib(comments, add_to_Lib:=0, index:=1)
 {
@@ -2744,15 +2683,10 @@ PicLib(comments, add_to_Lib:=0, index:=1)
   }
 }
 
-; Decompose a string into individual characters and get their data
-
 PicN(Number, index:=1)
 {
   return this.PicLib(RegExReplace(Number,".","|$0"), 0, index)
 }
-
-; Use FindText().PicX(Text) to automatically cut into multiple characters
-; Can't be used in ColorPos mode, because it can cause position errors
 
 PicX(Text)
 {
@@ -2777,16 +2711,10 @@ PicX(Text)
   return Text
 }
 
-; Screenshot and retained as the last screenshot.
-
 ScreenShot(x1:=0, y1:=0, x2:=0, y2:=0)
 {
   this.FindText(0, 0, x1, y1, x2, y2)
 }
-
-; Get the RGB color of a point from the last screenshot.
-; If the point to get the color is beyond the range of
-; Screen, it will return White color (0xFFFFFF).
 
 GetColor(x, y, fmt:=1)
 {
@@ -2797,8 +2725,6 @@ GetColor(x, y, fmt:=1)
   return (fmt ? Format("0x{:06X}",c&0xFFFFFF) : c)
 }
 
-; Set the RGB color of a point in the last screenshot
-
 SetColor(x, y, color:=0x000000)
 {
   local
@@ -2806,14 +2732,6 @@ SetColor(x, y, color:=0x000000)
   if !(x<zx or x>=zx+zw or y<zy or y>=zy+zh or !bits.Scan0)
     NumPut(color,bits.Scan0+(y-zy)*bits.Stride+(x-zx)*4,"uint")
 }
-
-; Identify a line of text or verification code
-; based on the result returned by FindText().
-; offsetX is the maximum interval between two texts,
-; if it exceeds, a "*" sign will be inserted.
-; offsetY is the maximum height difference between two texts.
-; overlapW is used to set the width of the overlap.
-; Return Association array {text:Text, x:X, y:Y, w:W, h:H}
 
 Ocr(ok, offsetX:=20, offsetY:=20, overlapW:=0)
 {
@@ -2850,9 +2768,6 @@ Ocr(ok, offsetX:=20, offsetY:=20, overlapW:=0)
   return {text:ocr_Text, x:ocr_X, y:min_Y
     , w: min_X-ocr_X, h: max_Y-min_Y}
 }
-
-; Sort the results of FindText() from left to right
-; and top to bottom, ignore slight height difference
 
 Sort(ok, dy:=10)
 {
