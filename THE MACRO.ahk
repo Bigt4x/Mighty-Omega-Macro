@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
-currentversion:= "2.0.5"
+currentversion:= "2.0.6"
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
 whr.Send()
@@ -171,7 +171,7 @@ StartTread:
         ret:
         Gosub, Check
         If (TE != "None") {
-            PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast
+            PixelSearch,,, 55, 143, 56, 144, 0x3A3A3A, 40, Fast
             If (ErrorLevel = 0) {
                 Click, 410, 345
                 Sleep 1000
@@ -227,7 +227,7 @@ StartTread:
                         Goto, ret
                     }
                 } ;; after not found anything
-                If (TE = "SlotEat") {
+                If (TE = "Slot Eat") {
                     If (Webhook1 := true) {
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                         If (TAAL = 1) {
@@ -259,8 +259,20 @@ StartTread:
                                 If (Webhook1 := true) {
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
-                                ExitApp
+                                If (TAAL = 1) {
+                                    Sleep 10000
+                                    Process, Close, RobloxPlayerBeta.exe
+                                }
+                                If (Webhook1 := true) {
+                                    If (TAAL = 1) {
+                                        WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
+                                    } else If (TAAL = 0) {
+                                        WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID))
+                                    }
+                                }
+                                ExitApp                                
                             }
+                            Break
                             Break
                         }   
                     }
@@ -274,13 +286,18 @@ StartTread:
         ImageSearch,,, 20, 120, 260, 140, *20 bin\Common use\Stamina.bmp
         If (ErrorLevel = 0) { ;; found stamina bar
             Tooltip, Found Stam, 650, 600
-            Sleep 100
-            If (TS = "Stamina") {
-                Click, 290, 310, 20
-            } else If (TS = "RunningSpeed") {
-                Click, 520, 310, 20
+            t1:=A_TickCount, Text:=X:=Y:=""
+            Text:="|<>*132$91.zzvzzzzzzzzDzzzVrxzzzjyyzzTzzzrTyzzzrzTTzjzzzvhlPkwEV337X7Wv5qrfzSxyrrNvNjRi7PlyDCwPvixirinThsyrvRhxrSrPrSjqxjPyiqyvDPBvDbvWnVst37aDiD4KA"
+            if (ok:=FindText(X, Y, 1019-150000, 501-150000, 1019+150000, 501+150000, 0, 0, Text))
+            {
+                Sleep 100
+                If (TS = "Stamina") {
+                    Click, 290, 310, 20
+                } else If (TS = "RunningSpeed") {
+                    Click, 520, 310, 20
+                }
             }
-            Tooltip, Clicked Level, 650, 600
+            Tooltip, Clicked Training, 650, 600
             Color:="0x5A5A5A,0x98FF79"
             wait := A_TickCount
             Loop,
@@ -296,10 +313,13 @@ StartTread:
                     Break
                 }
             } Until (A_TickCount - wait > 3000)
+            ToolTip, Click level, 650, 600
             Sleep 300 ;; forwat ^^^
             MouseMove, 0, 100,, R
-            PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
-            If (ErrorLevel = 1) { ;; If hand isn't in middle
+            t1:=A_TickCount, Text:=X:=Y:=""
+            Text:="|<>*124$36.zzzzTzzzzzzz6C6nMlRhavPhQ5qvPURxqvPjRxanPjSA63PlzzrzzzzzrzzzU"
+            if (ok:=FindText(X, Y, 946-150000, 442-150000, 946+150000, 442+150000, 0, 0, Text))
+            {
                 levell:="5,4,3,2,1"
                 If (TL = "Auto") {
                     Loop, Parse, levell, `,
@@ -337,7 +357,8 @@ StartTread:
                         }
                     }
                 }
-            }
+            } ;; else is hand
+            rehand:
             HandCheck:=A_TickCount
             Loop,
             {
@@ -353,6 +374,12 @@ StartTread:
                 }
             }
             Tooltip, Clicked Hand, 650, 600
+            t1:=A_TickCount, Text:=X:=Y:=""
+            Text:="|<>*124$47.6jjhznzyxzTTzzzzuWgFXcX7owxe7CqbdvvJyRh3IJmgR4OU"
+            if (ok:=FindText(X, Y, 958-150000, 593-150000, 958+150000, 593+150000, 0, 0, Text))
+            {
+                goto, rehand ; since many time the it didn't click the hand
+            }
             Sleep 3000
             button := "w,a,s,d"
             TreadmillTask := A_TickCount
@@ -545,7 +572,7 @@ StartSP:
                     PixelSearch,,, 190, 130, 191, 131, 0x3A3A3A, 40, Fast ;enough stamina for sp gain
                     If (ErrorLevel = 0) {
                         w := format("sc{:x}", getKeySC("w"))
-                        SendInput, {%w% up}
+                        SendInput, {%w% Up}
                         If (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
                             SetTimer, sendrhythm, -300
                         }
@@ -591,10 +618,9 @@ StartSP:
                 gosub, WaitSp
             }
         } 
-        
         ;; Autoeat
         If (SPE != "None") {
-            PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast ; Hungry
+            PixelSearch,,, 55, 143, 56, 144, 0x3A3A3A, 40, Fast ; Hungry
             If (ErrorLevel = 0) {
                 Send {BackSpace}
                 Sleep 200
@@ -649,9 +675,10 @@ StartSP:
                         Goto, re
                     }
                 } ;; after not found anything
-                If (SPE = "SlotEat") {
+                If (SPE = "Slot Eat") {
                     If (Webhook1 := true) {
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
+                        Sleep 100
                         If (SPAAL = 1) {
                             Sleep 10000
                             Process, Close, RobloxPlayerBeta.exe
@@ -664,6 +691,7 @@ StartSP:
                 } else If (SPE = "Slot+Inventory") {
                     sc("``", 1)sc("``", 2)  ;open inv
                     Send {Shift}
+                    Sleep 100
                     MouseMove, 100, 480
                     Sleep 600
                     xx=95
@@ -683,7 +711,19 @@ StartSP:
                                 If (Webhook1 := true) {
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
-                                ExitApp
+                                MsgBox, Out of food
+                                If (SPAAL = 1) {
+                                    Sleep 10000
+                                    Process, Close, RobloxPlayerBeta.exe
+                                }
+                                If (Webhook1 := true) {
+                                    If (SPAAL = 1) {
+                                        WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
+                                    } else If (SPAAL = 0) {
+                                        WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID))
+                                    }
+                                }
+                                ExitApp                                
                             }
                             Break
                         }   
@@ -1194,6 +1234,7 @@ GetUrlStatus( URL, Timeout = -1 ) {
     Return, WinHttpReq.Status()
 }
 DiscordSend(m,p) {
+
     postdata={"username":"i love vivace's macro","content":"%p% %m%"}
     Return postdata
 }
@@ -1232,21 +1273,21 @@ runfunction(direction) {
         sc("w", 2)
     }
 }
-siderunfunction(direction) {
-    If (direction = 1) { ; a key
-        send, {down down}
-        sc("w", 3)sc("w", 1)sc("a", 1)
-        sleep 1000
-        sc("w", 2)sc("a", 2)
-        send {down up}
-    } else If (direction = 2) {
-        send, {down down}
-        sc("w", 3)sc("w", 1)sc("d", 1)
-        sleep 1000
-        sc("w", 2)sc("d", 2)
-        send {down up}
-    }
-}
+;siderunfunction(direction) {
+;    If (direction = 1) { ; a key
+;        send, {down down}
+;        sc("w", 3)sc("w", 1)sc("a", 1)
+;        sleep 1000
+;        sc("w", 2)sc("a", 2)
+;        send {down up}
+;    } else If (direction = 2) {
+;        send, {down down}
+;        sc("w", 3)sc("w", 1)sc("d", 1)
+;        sleep 1000
+;        sc("w", 2)sc("d", 2)
+;        send {down up}
+;    }
+;}
 walkfunction(direction) {
     if (direction = 1) { ; left
         sc("w", 1)
@@ -1821,7 +1862,8 @@ Combat1:
         Random, oVar, 1, 2
         If (oVar = 2) {
             Random, oVar, 1, 2
-            siderunfunction(oVar)
+            sidewalkfunction(oVar)
+            ;siderunfunction(oVar)
         } else if (oVar = 1) {
             Random, oVar, 1, 2
             runfunction(oVar)
