@@ -1,11 +1,11 @@
 <div id="top"></div>
 
-<h3 align="center">Mighty Omega Macro</h3>
+<h3 align="center">Vivace's Mighty Omega Macro</h3>
 
   <p align="center">
     Macro for mighty omega using Autohotkey!
     <br />
-    <a href="https://www.roblox.com/games/4878988249/BERSERK-MODE-NEW-CLANS-Mighty-Omega"><strong>Game Link »</strong></a>
+    <a href="https://www.roblox.com/games/4878988249"><strong>Game Link »</strong></a>
     <br />
     <br />
     <a href="https://discord.gg/4rxfjtnMGt">Discord</a>
@@ -47,7 +47,7 @@ First step is you want to install autohotkey
 • How to Download it? [this](https://youtu.be/Y02T8AiiJxw)
 
 ### Tutorial
-   • Watch [this](https://youtu.be/5GATHIJGlSg) video <br>
+   • Watch [this](https://www.youtube.com/watch?v=k5x4WTynWS0&ab_channel=caprisun) video <br>
     more info [Discord](https://discord.gg/4rxfjtnMGt)
 
 
