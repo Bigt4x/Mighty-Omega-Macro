@@ -51,8 +51,11 @@ If !FileExist("settings.ini") {
 }
 
 $k::Pause
-$l::ExitApp
-
+$l::
+GuiEscape:
+GuiClose:
+    ExitApp
+return
 ;; main
 
 main:
