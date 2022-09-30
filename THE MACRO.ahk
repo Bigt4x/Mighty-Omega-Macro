@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
-currentversion:= "2.0.6"
+currentversion:= "2.0.7"
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
 whr.Send()
@@ -106,21 +106,22 @@ StartTread:
     IniWrite, %TAAL%, settings.ini, AdvTreadmill, TAAL
     If (TD = "Fatigue Estimate") {
         Gui, Add, Text, y10,How Many Round:
-        Gui, Add, Edit, ym vRound number,
+        Gui, Add, Edit, ym vvRound number,
         Gui, Add, Button, ym gtd, Done 
         Gui, Show,, Vivace's Macro
         Return
     }
     td:
     {
-        Gui, Submit
-        Gui, Destroy
+        If (TD = "Fatigue Estimate") {
+            Gui, Submit
+            Gui, Destroy
+        }
     }
     If (TAAC = 1) {
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
         if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
-            recordstuff = true
             Gui, Add, Text, y10,Record Key:
             Gui, Add, DDL, +Theme ym vKeyCombo , Win+Alt+G|F8|F12
             Gui, Add, Button, ym gRecorder, Done
@@ -132,9 +133,9 @@ StartTread:
     }
     Recorder:
     {
-        Gui, Submit
-        Gui, Destroy
-        if (recordstuff = true) {
+        If (TAAC = 1) {
+            Gui, Submit
+            Gui, Destroy
             Gosub, RecordStuff
         }
     }
@@ -149,8 +150,10 @@ StartTread:
     }
     stacss:
     {
-        Gui, Submit
-        Gui, Destroy
+        If (TASS = 1) {
+            Gui, Submit
+            Gui, Destroy
+        }
     }
     If (TASR = 1) {
         Gui, Add, Text, y10,Rest Delay Enabled:
@@ -163,8 +166,10 @@ StartTread:
     }
     stasrv:
     {
-        Gui, Submit
-        Gui, Destroy        
+        If (TASR = 1) {
+            Gui, Submit
+            Gui, Destroy      
+        }  
     }
     Loop,
     {
@@ -286,16 +291,11 @@ StartTread:
         ImageSearch,,, 20, 120, 260, 140, *20 bin\Common use\Stamina.bmp
         If (ErrorLevel = 0) { ;; found stamina bar
             Tooltip, Found Stam, 650, 600
-            t1:=A_TickCount, Text:=X:=Y:=""
-            Text:="|<>*132$91.zzvzzzzzzzzDzzzVrxzzzjyyzzTzzzrTyzzzrzTTzjzzzvhlPkwEV337X7Wv5qrfzSxyrrNvNjRi7PlyDCwPvixirinThsyrvRhxrSrPrSjqxjPyiqyvDPBvDbvWnVst37aDiD4KA"
-            if (ok:=FindText(X, Y, 1019-150000, 501-150000, 1019+150000, 501+150000, 0, 0, Text))
-            {
-                Sleep 100
-                If (TS = "Stamina") {
-                    Click, 290, 310, 20
-                } else If (TS = "RunningSpeed") {
-                    Click, 520, 310, 20
-                }
+            Sleep 100
+            If (TS = "Stamina") {
+                Click, 290, 310, 20
+            } else If (TS = "RunningSpeed") {
+                Click, 520, 310, 20
             }
             Tooltip, Clicked Training, 650, 600
             Color:="0x5A5A5A,0x98FF79"
@@ -312,74 +312,73 @@ StartTread:
                 If (ErrorLevel = 0) {
                     Break
                 }
-            } Until (A_TickCount - wait > 3000)
+                If (wait > 3000) {
+                    Goto, ret
+                }
+            } 
             ToolTip, Click level, 650, 600
             Sleep 300 ;; forwat ^^^
             MouseMove, 0, 100,, R
-            t1:=A_TickCount, Text:=X:=Y:=""
-            Text:="|<>*124$36.zzzzTzzzzzzz6C6nMlRhavPhQ5qvPURxqvPjRxanPjSA63PlzzrzzzzzrzzzU"
-            if (ok:=FindText(X, Y, 946-150000, 442-150000, 946+150000, 442+150000, 0, 0, Text))
-            {
-                levell:="5,4,3,2,1"
-                If (TL = "Auto") {
-                    Loop, Parse, levell, `,
-                    {
-                        ToolTip, Search For %A_LoopField%, 650, 600
-                        Sleep 100
-                        ImageSearch,,, 390, 240, 430, 390, *Trans0x5A5A5A *13 bin\level%A_LoopField%.bmp
-                        If (ErrorLevel = 0) {
-                            y:=y(A_LoopField)
-                            Tooltip, Choose %A_LoopField%, 650, 600
-                            Click, 470, %y%, 10
-                            Break
-                        } else If (ErrorLevel = 1) {
-                            If (A_Index = 5) {
-                                If (Webhook1 := true) {
-                                    WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID))
-                                } else if (Webhook1 = false) {
-                                    MsgBox, Not Found ;; Send Webhook and stop
-                                }
+            levell:="5,4,3,2,1"
+            If (TL = "Auto") {
+                Loop, Parse, levell, `,
+                {
+                    ToolTip, Search For %A_LoopField%, 650, 600
+                    Sleep 100
+                    ImageSearch,,, 390, 240, 430, 390, *Trans0x5A5A5A *13 bin\level%A_LoopField%.bmp
+                    If (ErrorLevel = 0) {
+                        y:=y(A_LoopField)
+                        Tooltip, Choose %A_LoopField%, 650, 600
+                        Click, 470, %y%, 10
+                        Break
+                    } else If (ErrorLevel = 1) {
+                        If (A_Index = 5) {
+                            If (Webhook1 := true) {
+                                WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID))
+                            } else if (Webhook1 = false) {
+                                MsgBox, Not Found ;; Send Webhook and stop
                             }
-                        } else If (ErrorLevel = 2) {
-                            MsgBox, FileMissing
-                            ExitApp
-                        } 
-                    }
-                } else If ((TL = "5") or (TL = "4") or (TL = "3") or (TL = "2") or (TL = "1")) {
-                    Loop, Parse, levell, `,
-                    {
-                        If (TL = A_LoopField) {
-                            y:=y(A_LoopField)
-                            Click, 470, %y%, 10
-                            ToolTip, Choose %A_LoopField% y = %y%, 650, 600
-                            Sleep 100
-                            Break
                         }
+                    } else If (ErrorLevel = 2) {
+                        MsgBox, FileMissing
+                        ExitApp
+                    } 
+                }
+            } else If ((TL = "5") or (TL = "4") or (TL = "3") or (TL = "2") or (TL = "1")) {
+                Loop, Parse, levell, `,
+                {
+                    If (TL = A_LoopField) {
+                        y:=y(A_LoopField)
+                        Click, 470, %y%, 10
+                        ToolTip, Choose %A_LoopField% y = %y%, 650, 600
+                        Break
                     }
                 }
-            } ;; else is hand
-            rehand:
+            }
+            Sleep 300
+            Loop,
+            {
+                PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
+                If (ErrorLevel = 1) {
+                    Click, 470, %y%, 10
+                    Sleep 300
+                }
+            } Until (ErrorLevel = 0) ; until found hand.
             HandCheck:=A_TickCount
             Loop,
             {
                 Timer := A_TickCount - HandCheck
                 PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
                 If (ErrorLevel = 0) {
-                    Click , 410, 355, 10
+                    Click , 410, 355, 20
                     Break
                 }
-                If (Timer > 10000) {
+                If (Timer > 15000) {
                     Msgbox, Not Found Hand Money Ranout
                     ExitApp
                 }
             }
             Tooltip, Clicked Hand, 650, 600
-            t1:=A_TickCount, Text:=X:=Y:=""
-            Text:="|<>*124$47.6jjhznzyxzTTzzzzuWgFXcX7owxe7CqbdvvJyRh3IJmgR4OU"
-            if (ok:=FindText(X, Y, 958-150000, 593-150000, 958+150000, 593+150000, 0, 0, Text))
-            {
-                goto, rehand ; since many time the it didn't click the hand
-            }
             Sleep 3000
             button := "w,a,s,d"
             TreadmillTask := A_TickCount
@@ -424,6 +423,7 @@ StartTread:
                     Break
                 }
             }
+            Round++
         }
         ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
         If (ErrorLevel = 0) {
@@ -437,9 +437,9 @@ StartTread:
         } 
         ; auto log for round
         If (TD = "Fatigue Estimate") {
-            vRound++
             If (Round = vRound) {
-                MsgBox, LOGGED
+                MsgBox, Auto leave 
+                ExitApp
             }
         }
     }
@@ -461,21 +461,22 @@ StartSP:
     IniWrite, %SPAAL%, settings.ini, AdvStrikePower, SPAAL
     If (SPD = "Fatigue Estimate") {
         Gui, Add, Text, y10,How Many Round:
-        Gui, Add, Edit, ym vRound number,
+        Gui, Add, Edit, ym vvRound number,
         Gui, Add, Button, ym gSPD, Done 
         Gui, Show,, Vivace's Macro
         Return
     }
     SPD:
     {
-        Gui, Submit
-        Gui, Destroy
+        if (SPD = "Fatigue Estimate") {
+            Gui, Submit
+            Gui, Destroy
+        }
     }
     If (SPAAC = 1) {
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
         if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
-            call = true
             Gui, Add, Text, y10,Record Key:
             Gui, Add, DDL, +Theme ym vKeyCombo , Win+Alt+G|F8|F12
             Gui, Add, Button, ym gRecorderr, Done
@@ -487,9 +488,9 @@ StartSP:
     }
     Recorderr:
     {
-        Gui, Submit
-        Gui, Destroy
-        if (call = true) {
+        If (SPAAC = 1) {
+            Gui, Submit
+            Gui, Destroy
             Gosub, RecordStuff
         }
     }
@@ -503,8 +504,10 @@ StartSP:
     }
     stspr:
     {
-        Gui, Submit
-        Gui, Destroy
+        if (SPSR = 1) {
+            Gui, Submit
+            Gui, Destroy
+        }
     }
     gosub, Check
     Send {BackSpace}{Click, Right}
@@ -596,6 +599,13 @@ StartSP:
                 ;; been punching nonstop for over 5 minute can be inf stamina? ;; might be unequip combat
                 MsgBox, Your Stamina is freezing
             }
+            If (SPD = "Fatigue Estimate") {
+            Round++
+            If (Round := vRound) {
+                MsgBox, Auto leave 
+                ExitApp
+            }
+        }
         } else If (ErrorLevel = 2) {
             MsgBox, FileMissing
             ExitApp
@@ -745,6 +755,7 @@ StartSP:
             }
             Gosub, Waitforcombat
         }
+        
     }
 Return
 StartWeight:
@@ -881,11 +892,25 @@ StartSS:
     IniWrite, %SSALT%, settings.ini, AdvStrikeSpeed, SSALT
     IniWrite, %SSAAC%, settings.ini, AdvStrikeSpeed, SSAAC
     IniWrite, %SSAAL%, settings.ini, AdvStrikeSpeed, SSAAL
+
+    if (SSD = "Fatigue Estimate") {
+        Gui, Add, Text, y10,How Many Round:
+        Gui, Add, Edit, ym vvRound number,
+        Gui, Add, Button, ym gssdd, Done 
+        Gui, Show,, Vivace's Macro
+        Return
+    }
+    ssdd:
+    {
+        if (SSD = "Fatigue Estimate") {
+            Gui, Submit
+            Gui, Destroy
+        }
+    }
     if (SSAAC = 1) {
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
         if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
-            recordstuff = true
             Gui, Add, Text, y10,Record Key:
             Gui, Add, DDL, +Theme ym vKeyCombo , Win+Alt+G|F8|F12
             Gui, Add, Button, ym gRecorderrr, Done
@@ -897,9 +922,9 @@ StartSS:
     }
     Recorderrr:
     {
-        Gui, Submit
-        Gui, Destroy
-        if (Recordstuff = true) {
+        if (SSAAC = 1) {
+            Gui, Submit
+            Gui, Destroy
             Gosub, Recordstuff
         }
     }
@@ -1046,7 +1071,6 @@ StartSS:
                     Send {%d% Up}
                 }
             }
-
             ;; activate
             Send {BackSpace}
             Sleep 100
@@ -1160,6 +1184,7 @@ StartSS:
                     Send {%w% Up}
                 }
             }
+
             TimeTotal := A_TickCount - SSTASK
             ;; convert ms to sec
             count++
@@ -1197,6 +1222,13 @@ StartSS:
                 )
                 WinHttpReq.Send(cc)
                 ToolTip, Send Log
+            }
+            If (SSD = "Fatigue Estimate") {
+                Round++
+                If (Round := vRound) {
+                    MsgBox, Auto leave 
+                    ExitApp
+                }
             }
         } else {
             Send {BackSpace}
