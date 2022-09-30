@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
-currentversion:= "2.0.7"
+currentversion:= "2.0.8"
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
 whr.Send()
@@ -10,13 +10,13 @@ whr.WaitForResponse()
 version := whr.ResponseText
 if (version != currentversion) {
     MsgBox, 51, Update Check, A new version of Vivace's Macro is avalable.`n`nCurrent Version: %currentversion%`nLastest Version: %version%`n`nVisit download page?
-    IfMsgBox, Yes
+    ifMsgBox, Yes
     {
         run, https://github.com/Cweamy/Mighty-Omega-Macro
     }
 }
 MsgBox, K is Pause L is Exit
-If (A_ScreenDPI != 96) { ;; checking scale and layout
+if (A_ScreenDPI != 96) { ;; checking scale and layout
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
     ;; might add a option that ask if you want to use 100% scale
     ExitApp
@@ -30,11 +30,11 @@ SetMouseDelay, -1
 CoordMode, Pixel, Window
 CoordMode, Mouse, Window
 
-If !FileExist("bin") {
+if !FileExist("bin") {
     MsgBox, File Missing
     ExitApp
 }
-If !FileExist("settings.ini") {
+if !FileExist("settings.ini") {
     FileAppend,, settings.ini
     Reload
     Return
@@ -60,25 +60,26 @@ return
 
 main:
 {
-    if (Webhook1 := true) { ;; making thing ready
+    if (Webhook1 = true) { ;; making thing ready
+        MsgBox, webhook is enabled
         WinHttpReq := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-        WinHttpReq.Open("POST", Webhook, true)
+        WinHttpReq.Open("POST", Webhook, true) 
         WinHttpReq.SetRequestHeader("Content-Type", "application/json")
     }
     ;; Start Read Saved Data from settings.ini
     gosub, LoadData
     ;; load gui
     gosub, LoadMainGui
-    Hidethis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,vvvtext1,vvvtext2,vvvtext3,vvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button,vvvtext5,SSP"
+    Hidethis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,SPASD,3button,2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,vvvtext1,vvvtext2,vvvtext3,vvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button,vvvtext5,SSP"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
     }
     ;; load saved ddl
-    CheckBox:="SPASR,SPAAC,SPAAL,SPAWS,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL,SSALT,SSAAC,SSAAL"
+    CheckBox:="SPASR,SPAAC,SPAAL,SPAWS,SPASD,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL,SSALT,SSAAC,SSAAL"
     Loop, Parse, CheckBox, `,
     {
-        If (%A_LoopField% = "ERROR") {
+        if (%A_LoopField% = "ERROR") {
             %A_LoopField% = 0
         }
     }
@@ -93,7 +94,7 @@ Return
 StartTread:
     Gui, Submit
     Gui, Destroy
-    If (TS = "" or TL = "" or TE = "" or TD = "" or TA = "") {
+    if (TS = "" or TL = "" or TE = "" or TD = "" or TA = "") {
         MsgBox,,Vivace's Macro,You have incomplete information.
         ExitApp
     }
@@ -107,7 +108,7 @@ StartTread:
     IniWrite, %TASR%, settings.ini, AdvTreadmill, TASR
     IniWrite, %TAAC%, settings.ini, AdvTreadmill, TAAC
     IniWrite, %TAAL%, settings.ini, AdvTreadmill, TAAL
-    If (TD = "Fatigue Estimate") {
+    if (TD = "Fatigue Estimate") {
         Gui, Add, Text, y10,How Many Round:
         Gui, Add, Edit, ym vvRound number,
         Gui, Add, Button, ym gtd, Done 
@@ -116,12 +117,12 @@ StartTread:
     }
     td:
     {
-        If (TD = "Fatigue Estimate") {
+        if (TD = "Fatigue Estimate") {
             Gui, Submit
             Gui, Destroy
         }
     }
-    If (TAAC = 1) {
+    if (TAAC = 1) {
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
         if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
@@ -136,40 +137,40 @@ StartTread:
     }
     Recorder:
     {
-        If (TAAC = 1) {
+        if (TAAC = 1) {
             Gui, Submit
             Gui, Destroy
             Gosub, RecordStuff
         }
     }
-    If (TASS = 1) {
+    if (TASS = 1) {
         Gui, Add, Text, y10,Start Delay Enabled:
         Gui, Add, Edit, Number ym vTASSV,
         Gui, Add, Button, ym gstacss, Done
         Gui, Show,, Vivace's Macro
         Return
-    } else If (TASS = 0) {
+    } else if (TASS = 0) {
         TASSV = 0
     }
     stacss:
     {
-        If (TASS = 1) {
+        if (TASS = 1) {
             Gui, Submit
             Gui, Destroy
         }
     }
-    If (TASR = 1) {
+    if (TASR = 1) {
         Gui, Add, Text, y10,Rest Delay Enabled:
         Gui, Add, Edit, Number ym vTASRV,
         Gui, Add, Button, ym gstasrv, Done
         Gui, Show,, Vivace's Macro
         Return
-    } else If (TASR = 0) {
+    } else if (TASR = 0) {
         TASRV = 9000
     }
     stasrv:
     {
-        If (TASR = 1) {
+        if (TASR = 1) {
             Gui, Submit
             Gui, Destroy      
         }  
@@ -178,9 +179,9 @@ StartTread:
     {
         ret:
         Gosub, Check
-        If (TE != "None") {
+        if (TE != "None") {
             PixelSearch,,, 55, 143, 56, 144, 0x3A3A3A, 40, Fast
-            If (ErrorLevel = 0) {
+            if (ErrorLevel = 0) {
                 Click, 410, 345
                 Sleep 1000
                 Slot:="1,2,3,4,5,6,7,8,9,0"
@@ -191,21 +192,21 @@ StartTread:
                     Send {%scslot%}
                     Sleep 150
                     ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
-                    If (ErrorLevel = 0) {
+                    if (ErrorLevel = 0) {
                         Loop,
                         {
                             PixelSearch,,, 119, 144, 110, 146, 0x3A3A3A, 40, Fast ; if the hunger isn't full
-                            If (ErrorLevel = 0) {
+                            if (ErrorLevel = 0) {
                                 Click, 405, 620
                                 ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
-                                If (ErrorLevel = 1) {
+                                if (ErrorLevel = 1) {
                                     Break
                                 }
-                            } else If (ErrorLevel = 1) {
+                            } else if (ErrorLevel = 1) {
                                 Break
                             }
                             ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-                            If (ErrorLevel = 0) {
+                            if (ErrorLevel = 0) {
                                 Gosub, RecordUsername
                                 Gosub, Waitforcombat
                             }
@@ -213,12 +214,12 @@ StartTread:
                         Loop, ;; have to wait until stamina is full incase something stopped 
                         {
                             ImageSearch,,, 20, 120, 260, 140, *20 bin\Common Use\Stamina.bmp
-                            If (ErrorLevel = 0) {
+                            if (ErrorLevel = 0) {
                                 Break
                             }
                             ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-                            If (ErrorLevel = 0) {
-                                If (TAAC = 1) {
+                            if (ErrorLevel = 0) {
+                                if (TAAC = 1) {
                                     Gosub, RecordUsername
                                 }
                                 Gosub, Waitforcombat
@@ -235,19 +236,19 @@ StartTread:
                         Goto, ret
                     }
                 } ;; after not found anything
-                If (TE = "Slot Eat") {
-                    If (Webhook1 := true) {
+                if (TE = "Slot Eat") {
+                    if (Webhook1 = true) { 
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
-                        If (TAAL = 1) {
+                        if (TAAL = 1) {
                             Sleep 10000
                             Process, Close, RobloxPlayerBeta.exe
                             WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
-                        } else If (TAAL = 0) {
+                        } else if (TAAL = 0) {
                             WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID))
                         }
                     }
                     ExitApp
-                } else If (TE = "Slot+Inventory") {
+                } else if (TE = "Slot+Inventory") {
                     sc("``", 1)sc("``", 2)  ;open inv
                     MouseMove, 100, 480
                     Sleep 600
@@ -255,26 +256,26 @@ StartTread:
                     Loop, 10
                     {
                         ImageSearch, x, y, 90, 195, 675, 500, *10 bin/Common Use/x5.bmp
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Sleep 40
                             Click, %x%, %y%, Down
                             Sleep 50
                             Click, %xx%, 555, Up
                             Sleep 60
                             xx:=xx+70
-                        } else If (ErrorLevel = 1) {
-                            If (A_Index = 1) {
-                                If (Webhook1 := true) {
+                        } else if (ErrorLevel = 1) {
+                            if (A_Index = 1) {
+                                if (Webhook1 = true) { 
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
-                                If (TAAL = 1) {
+                                if (TAAL = 1) {
                                     Sleep 10000
                                     Process, Close, RobloxPlayerBeta.exe
                                 }
-                                If (Webhook1 := true) {
-                                    If (TAAL = 1) {
+                                if (Webhook1 = true) { 
+                                    if (TAAL = 1) {
                                         WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
-                                    } else If (TAAL = 0) {
+                                    } else if (TAAL = 0) {
                                         WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID))
                                     }
                                 }
@@ -292,12 +293,12 @@ StartTread:
             }
         }
         ImageSearch,,, 20, 120, 260, 140, *20 bin\Common use\Stamina.bmp
-        If (ErrorLevel = 0) { ;; found stamina bar
+        if (ErrorLevel = 0) { ;; found stamina bar
             Tooltip, Found Stam, 650, 600
             Sleep 100
-            If (TS = "Stamina") {
+            if (TS = "Stamina") {
                 Click, 290, 310, 20
-            } else If (TS = "RunningSpeed") {
+            } else if (TS = "RunningSpeed") {
                 Click, 520, 310, 20
             }
             Tooltip, Clicked Training, 650, 600
@@ -308,14 +309,14 @@ StartTread:
                 Loop, Parse, Color, `,
                 {
                     PixelSearch,,, 339, 249, 340, 250, %A_LoopField%,, Fast
-                    If (ErrorLevel = 0) {
+                    if (ErrorLevel = 0) {
                         Break
                     }
                 }
-                If (ErrorLevel = 0) {
+                if (ErrorLevel = 0) {
                     Break
                 }
-                If (wait > 3000) {
+                if (wait > 3000) {
                     Goto, ret
                 }
             } 
@@ -323,34 +324,34 @@ StartTread:
             Sleep 300 ;; forwat ^^^
             MouseMove, 0, 100,, R
             levell:="5,4,3,2,1"
-            If (TL = "Auto") {
+            if (TL = "Auto") {
                 Loop, Parse, levell, `,
                 {
                     ToolTip, Search For %A_LoopField%, 650, 600
                     Sleep 100
                     ImageSearch,,, 390, 240, 430, 390, *Trans0x5A5A5A *13 bin\level%A_LoopField%.bmp
-                    If (ErrorLevel = 0) {
+                    if (ErrorLevel = 0) {
                         y:=y(A_LoopField)
                         Tooltip, Choose %A_LoopField%, 650, 600
                         Click, 470, %y%, 10
                         Break
-                    } else If (ErrorLevel = 1) {
-                        If (A_Index = 5) {
-                            If (Webhook1 := true) {
+                    } else if (ErrorLevel = 1) {
+                        if (A_Index = 5) {
+                            if (Webhook1 = true) { 
                                 WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID))
                             } else if (Webhook1 = false) {
                                 MsgBox, Not Found ;; Send Webhook and stop
                             }
                         }
-                    } else If (ErrorLevel = 2) {
+                    } else if (ErrorLevel = 2) {
                         MsgBox, FileMissing
                         ExitApp
                     } 
                 }
-            } else If ((TL = "5") or (TL = "4") or (TL = "3") or (TL = "2") or (TL = "1")) {
+            } else if ((TL = "5") or (TL = "4") or (TL = "3") or (TL = "2") or (TL = "1")) {
                 Loop, Parse, levell, `,
                 {
-                    If (TL = A_LoopField) {
+                    if (TL = A_LoopField) {
                         y:=y(A_LoopField)
                         Click, 470, %y%, 10
                         ToolTip, Choose %A_LoopField% y = %y%, 650, 600
@@ -362,7 +363,7 @@ StartTread:
             Loop,
             {
                 PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
-                If (ErrorLevel = 1) {
+                if (ErrorLevel = 1) {
                     Click, 470, %y%, 10
                     Sleep 300
                 }
@@ -372,11 +373,11 @@ StartTread:
             {
                 Timer := A_TickCount - HandCheck
                 PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
-                If (ErrorLevel = 0) {
+                if (ErrorLevel = 0) {
                     Click , 410, 355, 20
                     Break
                 }
-                If (Timer > 15000) {
+                if (Timer > 15000) {
                     Msgbox, Not Found Hand Money Ranout
                     ExitApp
                 }
@@ -385,62 +386,69 @@ StartTread:
             Sleep 3000
             button := "w,a,s,d"
             TreadmillTask := A_TickCount
-            If (TASS = 1) {
+            if (TASS = 1) {
                 Sleep %TASSV%
             }
+            w := format("sc{:x}", getKeySC("w"))
+            a := format("sc{:x}", getKeySC("a"))
+            s := format("sc{:x}", getKeySC("s"))
+            d := format("sc{:x}", getKeySC("d"))
             Loop,
             {
                 TaskTimer := A_TickCount - TreadmillTask
-                Loop, Parse, button, `,
-                {
-                    ImageSearch,,, 200, 240, 600, 300, *50 bin\%A_LoopField%.bmp
-                    If (ErrorLevel = 0) {
-                        Tooltip, Send %A_LoopField%, 650, 600
-                        keytread:=A_LoopField
-                        sc(keytread, 3)
-                        Break
+                If (TaskTimer < 60000) { ; this might fix the knock thing on tread
+                    Loop, Parse, button, `,
+                    {
+                        ImageSearch,,, 200, 240, 600, 300, *50 bin\%A_LoopField%.bmp
+                        if (ErrorLevel = 0) {
+                            Tooltip, Send %A_LoopField%, 650, 600
+                            Key := format("sc{:x}", getKeySC(A_LoopField))
+                            Send {%Key%}
+                            Break
+                        }
                     }
                 }
-                If (TASD = 1) {
-                    IF (TA = "High") {
+                if (TASD = 1) {
+                    if (TA = "High") {
                         PixelSearch ,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Gosub, WaitTreadmill
                         }
-                    } else If (TA = "Medium") {
+                    } else if (TA = "Medium") {
                         PixelSearch ,,, 40, 130, 50, 133, 0x3A3A3A, 40, Fast
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Gosub, WaitTreadmill
                         }
-                    } else If (TA = "Low") {
+                    } else if (TA = "Low") {
                         PixelSearch ,,, 40, 130, 60, 133, 0x3A3A3A, 40, Fast
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Gosub, WaitTreadmill
                         }
                     }
                 }
-                If (TaskTimer > 55000) {
+                if (TaskTimer > 55000) {
                     Click, 400, 290
                 }
-                If (TaskTimer > 65000) {
+                if (TaskTimer > 65000) {
                     Break
                 }
             }
+            tooltip end round, 650, 600
             Round++
         }
         ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-        If (ErrorLevel = 0) {
-            If (TAAC = 1) {
+        if (ErrorLevel = 0) {
+            if (TAAC = 1) {
                 Gosub, RecordUsername
             }
             Gosub, Waitforcombat
-        } else If (ErrorLevel = 2) {
+        } else if (ErrorLevel = 2) {
             MsgBox, FileMissing
             ExitApp
         } 
         ; auto log for round
-        If (TD = "Fatigue Estimate") {
-            If (Round = vRound) {
+        if (TD = "Fatigue Estimate") {
+            if (Round = vRound) {
                 MsgBox, Auto leave 
                 ExitApp
             }
@@ -450,7 +458,7 @@ Return
 StartSP:
     Gui, Submit
     Gui, Destroy
-    If ((SPR = "") or (SPA = "") or (SPD = "") or (SPE = "")) {
+    if ((SPR = "") or (SPA = "") or (SPD = "") or (SPE = "")) {
         msgbox,,Vivace's Macro,You have incomplete information.
         ExitApp
     }
@@ -458,11 +466,12 @@ StartSP:
     IniWrite, %SPA%, settings.ini, StrikePower, SPA
     IniWrite, %SPD%, settings.ini, StrikePower, SPD
     IniWrite, %SPE%, settings.ini, StrikePower, SPE
+    IniWrite, %SPASD%, settings.ini, AdvStrikePower, SPASD
     IniWrite, %SPAWS%, settings.ini, AdvStrikePower, SPAWS
     IniWrite, %SPASR%, settings.ini, AdvStrikePower, SPASR
     IniWrite, %SPAAC%, settings.ini, AdvStrikePower, SPAAC
     IniWrite, %SPAAL%, settings.ini, AdvStrikePower, SPAAL
-    If (SPD = "Fatigue Estimate") {
+    if (SPD = "Fatigue Estimate") {
         Gui, Add, Text, y10,How Many Round:
         Gui, Add, Edit, ym vvRound number,
         Gui, Add, Button, ym gSPD, Done 
@@ -476,7 +485,7 @@ StartSP:
             Gui, Destroy
         }
     }
-    If (SPAAC = 1) {
+    if (SPAAC = 1) {
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
         if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
@@ -491,18 +500,18 @@ StartSP:
     }
     Recorderr:
     {
-        If (SPAAC = 1) {
+        if (SPAAC = 1) {
             Gui, Submit
             Gui, Destroy
             Gosub, RecordStuff
         }
     }
-    If (SPSR = 1) {
+    if (SPSR = 1) {
         Gui, Add, Text, y10,Rest Delay Enabled:
         Gui, Add, Edit, Number ym vSPSRV,
         Gui, Add, Button, ym gstspsr, Done
         Gui, Show,, Vivace's Macro
-    } else If (SPSR = 0) {
+    } else if (SPSR = 0) {
         SPSRV = 9000
     }
     stspr:
@@ -524,9 +533,9 @@ StartSP:
         Gosub, Check
         re:
         ImageSearch,,, 20, 120, 260, 140, *20 bin\Common Use\Stamina.bmp
-        If (ErrorLevel = 0) {
+        if (ErrorLevel = 0) {
             ;; Check for combat tool if equip or not
-            If (SPAWS = 1) {
+            if (SPAWS = 1) {
                 Sleep 100
                 Send {BackSpace}
                 Sleep 100
@@ -536,7 +545,7 @@ StartSP:
                 Loop,
                 {
                     CheckTimer:=A_TickCount-Timer
-                    If (CheckTimer > 60000) {
+                    if (CheckTimer > 60000) {
                         SPAWS = 0
                         eat = 2
                         Break
@@ -546,11 +555,11 @@ StartSP:
                     Sleep 50
                 } Until (ErrorLevel = 1)
                 Send 1
-                If (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
+                if (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
                     SetTimer, sendrhythm, -1000
                 }
                 HUH:=A_TickCount
-            } else If (SPAWS = 0) {
+            } else if (SPAWS = 0) {
                 Send {BackSpace}
                 Sleep 100
                 Send 1
@@ -564,22 +573,50 @@ StartSP:
                 Loop,
                 {
                     TimerCheck:=A_TickCount-Timer
-                    If (TimerCheck > 60000) {
+                    if (TimerCheck > 60000) {
                         ;; running too long inf stam?
                         MsgBox, Your Stamina is freezing
                     }
                     ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-                    If (ErrorLevel = 0) {
-                        If (TAAC = 1) {
+                    if (ErrorLevel = 0) {
+                        if (TAAC = 1) {
                             Gosub, RecordUsername
                         }
                         Gosub, Waitforcombat
                     }
-                    PixelSearch,,, 190, 130, 191, 131, 0x3A3A3A, 40, Fast ;enough stamina for sp gain
-                    If (ErrorLevel = 0) {
+                    found = false
+                    Loop, 1 ; enough stam for sp gain
+                    {
+                        if (SPA = "Low") {
+                            PixelSearch,,, 185, 130, 186, 131, 0x3A3A3A, 40, Fast
+                            if (ErrorLevel = 0) {
+                                found = true
+                                Break
+                            }
+                        } else if (SPA = "Medium") {
+                            PixelSearch,,, 165, 130, 166, 131, 0x3A3A3A, 40, Fast
+                            if (ErrorLevel = 0) {
+                                found = true
+                                Break
+                            }
+                        } else if (SPA = "High") {
+                            PixelSearch,,, 145, 130, 146, 131, 0x3A3A3A, 40, Fast
+                            if (ErrorLevel = 0) {
+                                found = true
+                                Break
+                            }
+                        } else if (SPA = "Super High") { ; 4k stam 0 sp :skull: 
+                            PixelSearch,,, 75, 130, 76, 131, 0x3A3A3A, 40, Fast
+                            if (ErrorLevel = 0) {
+                                found = true
+                                Break
+                            }
+                        }
+                    }
+                    if (found = true) {
                         w := format("sc{:x}", getKeySC("w"))
                         SendInput, {%w% Up}
-                        If (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
+                        if (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
                             SetTimer, sendrhythm, -300
                         }
                         HUH:=A_TickCount    
@@ -592,54 +629,41 @@ StartSP:
                 }
                 HUH:=A_TickCount 
             }
-        } else If (ErrorLevel = 1) {
+        } else if (ErrorLevel = 1) { ; error here
             SetMouseDelay, 10
             Click, 50
             Click, Right
             ;; low stam timer check
             STAMCHECK:=A_TickCount-HUH
-            If (STAMCHECK > 300000) { ; 5 minute
+            if (STAMCHECK > 300000) AND (SPASD = 1) { ; 5 minute
                 ;; been punching nonstop for over 5 minute can be inf stamina? ;; might be unequip combat
                 MsgBox, Your Stamina is freezing
             }
-            If (SPD = "Fatigue Estimate") {
-            Round++
-            If (Round := vRound) {
+            if (SPD = "Fatigue Estimate") {
+                Round++
+                if (Round := vRound) {
                 MsgBox, Auto leave 
                 ExitApp
             }
         }
-        } else If (ErrorLevel = 2) {
+        } else if (ErrorLevel = 2) {
             MsgBox, FileMissing
             ExitApp
         } 
         ;; low stam
-
-        If (SPA = "Low") {
-            PixelSearch ,,, 40, 130, 60, 133, 0x3A3A3A, 40, Fast
-            If (ErrorLevel = 0) {
-                gosub, WaitSp
-            }
-        } else If (SPA = "Medium") {
-            PixelSearch ,,, 40, 130, 50, 133, 0x3A3A3A, 40, Fast
-            If (ErrorLevel = 0) {
-                gosub, WaitSp
-            }
-        } else If (SPA = "High") {
-            PixelSearch ,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
-            If (ErrorLevel = 0) {
-                gosub, WaitSp
-            }
-        } 
+        PixelSearch,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
+        if (ErrorLevel = 0) {
+            gosub, WaitSp
+        }
         ;; Autoeat
-        If (SPE != "None") {
+        if (SPE != "None") {
             PixelSearch,,, 55, 143, 56, 144, 0x3A3A3A, 40, Fast ; Hungry
-            If (ErrorLevel = 0) {
+            if (ErrorLevel = 0) {
                 Send {BackSpace}
                 Sleep 200
-                If (SPAWS = 1) or (eat = 2) {
+                if (SPAWS = 1) or (eat = 2) {
                     Slot:="3,4,5,6,7,8,9,0"
-                } else If (SPAWS = 0) {
+                } else if (SPAWS = 0) {
                     Slot:="2,3,4,5,6,7,8,9,0"
                 }
                 Loop, Parse, Slot, `,
@@ -649,21 +673,21 @@ StartSP:
                     Send {%scslot%}
                     Sleep 150
                     ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
-                    If (ErrorLevel = 0) {
+                    if (ErrorLevel = 0) {
                         Loop,
                         {
                             PixelSearch,,, 119, 144, 110, 146, 0x3A3A3A, 40, Fast ; if the hunger isn't full
-                            If (ErrorLevel = 0) {
+                            if (ErrorLevel = 0) {
                                 Click
                                 ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
-                                If (ErrorLevel = 1) {
+                                if (ErrorLevel = 1) {
                                     Break
                                 }
-                            } else If (ErrorLevel = 1) {
+                            } else if (ErrorLevel = 1) {
                                 Break
                             }
                             ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-                            If (ErrorLevel = 0) {
+                            if (ErrorLevel = 0) {
                                 Gosub, RecordUsername
                                 Gosub, Waitforcombat
                             }
@@ -672,12 +696,12 @@ StartSP:
                         Loop, ;; have to wait until stamina is full incase something stopped 
                         {
                             ImageSearch,,, 20, 120, 260, 140, *20 bin\Common Use\Stamina.bmp
-                            If (ErrorLevel = 0) {
+                            if (ErrorLevel = 0) {
                                 Break
                             }
                             ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-                            If (ErrorLevel = 0) {
-                                If (TAAC = 1) {
+                            if (ErrorLevel = 0) {
+                                if (TAAC = 1) {
                                     Gosub, RecordUsername
                                 }
                                 Gosub, Waitforcombat
@@ -688,20 +712,20 @@ StartSP:
                         Goto, re
                     }
                 } ;; after not found anything
-                If (SPE = "Slot Eat") {
-                    If (Webhook1 := true) {
+                if (SPE = "Slot Eat") {
+                    if (Webhook1 = true) { 
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                         Sleep 100
-                        If (SPAAL = 1) {
+                        if (SPAAL = 1) {
                             Sleep 10000
                             Process, Close, RobloxPlayerBeta.exe
                             WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
-                        } else If (SPAAL = 0) {
+                        } else if (SPAAL = 0) {
                             WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID))
                         }
                     }
                     ExitApp
-                } else If (SPE = "Slot+Inventory") {
+                } else if (SPE = "Slot+Inventory") {
                     sc("``", 1)sc("``", 2)  ;open inv
                     Send {Shift}
                     Sleep 100
@@ -712,27 +736,27 @@ StartSP:
                     Loop, %Loop%
                     {
                         ImageSearch, x, y, 90, 195, 675, 500, *10 bin/Common Use/x5.bmp
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Sleep 40
                             Click, %x%, %y%, Down
                             Sleep 50
                             Click, %xx%, 555, Up
                             Sleep 60
                             xx:=xx+70
-                        } else If (ErrorLevel = 1) {
-                            If (A_Index = 1) {
-                                If (Webhook1 := true) {
+                        } else if (ErrorLevel = 1) {
+                            if (A_Index = 1) {
+                                if (Webhook1 = true) { 
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
                                 MsgBox, Out of food
-                                If (SPAAL = 1) {
+                                if (SPAAL = 1) {
                                     Sleep 10000
                                     Process, Close, RobloxPlayerBeta.exe
                                 }
-                                If (Webhook1 := true) {
-                                    If (SPAAL = 1) {
+                                if (Webhook1 = true) { 
+                                    if (SPAAL = 1) {
                                         WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
-                                    } else If (SPAAL = 0) {
+                                    } else if (SPAAL = 0) {
                                         WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID))
                                     }
                                 }
@@ -752,8 +776,8 @@ StartSP:
 
         ;; combat 
         ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-        If (ErrorLevel = 0) {
-            If (TAAC = 1) {
+        if (ErrorLevel = 0) {
+            if (TAAC = 1) {
                 Gosub, RecordUsername
             }
             Gosub, Waitforcombat
@@ -779,30 +803,30 @@ StartWeight:
         Gosub, Check
         weight:
         ImageSearch,,, 20, 120, 260, 140, *20 bin\Common Use\Stamina.bmp
-        If (ErrorLevel = 0) {
+        if (ErrorLevel = 0) {
             PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
-            If (ErrorLevel = 1) { ;; If hand isn't in middle
+            if (ErrorLevel = 1) { ;; if hand isn't in middle
                 levell:="6,5,4,3,2,1"
-                If (WL = "Auto") {
+                if (WL = "Auto") {
                     Loop, Parse, levell, `,
                     {
                         ToolTip, Search For %A_LoopField%, 650, 600
                         Sleep 100
                         ImageSearch,,, 390, 240, 430, 390, *Trans0x5A5A5A *13 bin\w%A_LoopField%.bmp
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             y:=y(A_LoopField)
                             Tooltip, Choose %A_LoopField%, 650, 600
                             Click, 470, %y%, 10
                             Break
-                        } else If (ErrorLevel = 1) {
-                            If (A_Index = 5) {
-                                If (Webhook1 := true) {
+                        } else if (ErrorLevel = 1) {
+                            if (A_Index = 5) {
+                                if (Webhook1 = true) { 
                                     WinHttpReq.Send(DiscordSend("You are pushed away from Weight",UserID))
                                 } else if (Webhook1 = false) {
                                     MsgBox, Not Found ;; Send Webhook and stop
                                 }
                             }
-                        } else If (ErrorLevel = 2) {
+                        } else if (ErrorLevel = 2) {
                             MsgBox, FileMissing
                             ExitApp
                         } 
@@ -810,7 +834,7 @@ StartWeight:
                 } else { ;; if not auto
                     Loop, Parse, levell, `,
                     {
-                        If (WL = A_LoopField) {
+                        if (WL = A_LoopField) {
                             y:=y(A_LoopField)
                             tooltip, y = %y%, 650,600
                             Click, 470, %y%, 10
@@ -826,11 +850,11 @@ StartWeight:
             {
                 Timer := A_TickCount - HandCheck
                 PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
-                If (ErrorLevel = 0) {
+                if (ErrorLevel = 0) {
                     Click , 410, 355, 10
                     Break
                 }
-                If (Timer > 10000) {
+                if (Timer > 10000) {
                     Msgbox, Not Found Hand Money Ranout
                     ExitApp
                 }
@@ -851,20 +875,20 @@ StartWeight:
                     MouseMove, 400, 540, 0
                     Sleep 20
                 }
-                If (WASD = 1) {
-                    IF (WA = "High") {
+                if (WASD = 1) {
+                    if (WA = "High") {
                         PixelSearch ,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Gosub, WaitWeight
                         }
-                    } else If (WA = "Medium") {
+                    } else if (WA = "Medium") {
                         PixelSearch ,,, 40, 130, 50, 133, 0x3A3A3A, 40, Fast
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Gosub, WaitWeight
                         }
-                    } else If (WA = "Low") {
+                    } else if (WA = "Low") {
                         PixelSearch ,,, 40, 130, 60, 133, 0x3A3A3A, 40, Fast
-                        If (ErrorLevel = 0) {
+                        if (ErrorLevel = 0) {
                             Gosub, WaitWeight
                         }
                     }
@@ -877,7 +901,7 @@ StartWeight:
             } Until A_TickCount - WeightTask > 70000
         }
         ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-        If (ErrorLevel = 0) {
+        if (ErrorLevel = 0) {
             Gosub, Waitforcombat
         }
 
@@ -931,48 +955,48 @@ StartSS:
             Gosub, Recordstuff
         }
     }
-    If (SSP = "Custom") {
-        If (SST = "Karate") { ;Karate|Capoeira|Muay Thai|Advance Brawl|Boxing 
+    if (SSP = "Custom") {
+        if (SST = "Karate") { ;Karate|Capoeira|Muay Thai|Advance Brawl|Boxing 
             InputBox, path1, Vivace's Macro,Karate 1st Custom Walk Distance (Default: 960ms),, 400, 130
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
                 path1 = 960
             }
             InputBox, path2, Vivace's Macro,Karate 2nd Custom Walk Distance (Default: 660ms),, 400, 130
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
                 path2 = 660
             }
         }
-        If (SST = "Capoeira") {
+        if (SST = "Capoeira") {
             InputBox, path1, Vivace's Macro,Capoeira 1st Custom Walk Distance (Default: 1300ms),, 400, 130
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
                 path1 = 1300
             }
         }
-        If (SST = "Muay Thai") {
+        if (SST = "Muay Thai") {
             InputBox, path1, Vivace's Macro,Muay Thai 1st Custom Walk Distance (Default: 1100ms),, 400, 130
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
                 path1 = 1100
             }
         }
-        If (SST = "Advance Brawl") {
+        if (SST = "Advance Brawl") {
             InputBox, path1, Vivace's Macro,Advance Brawl 1st Custom Walk Distance (Default: 1800ms),, 400, 130
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
                 path1 = 1800
             }
         }
-        If (SST = "Boxing") {
+        if (SST = "Boxing") {
             InputBox, path1, Vivace's Macro,Boxing 1st Custom Walk Distance (Default: 820ms),, 400, 130
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
                 path1 = 820
             }
             InputBox, path2, Vivace's Macro,Boxing 2nd Custom Walk Distance (Default: 580ms),, 400, 130
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 msgbox,,Vivace's Macro,Set to default
                 path2 = 580
             }
@@ -999,15 +1023,15 @@ StartSS:
             s := format("sc{:x}", getKeySC("s"))
             d := format("sc{:x}", getKeySC("d"))
             ;; Waling path
-            If (SST = "Boxing") { 
-                If (SSP = "Custom") {
+            if (SST = "Boxing") { 
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}{%d% Down}
                     Sleep %path1%
                     Send {%d% Up}{%w% Down}
                     Sleep %path2%
                     Send {%w% Up}{Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}{%d% Down}
                     Sleep 820
                     Send {%d% Up}{%w% Down}
@@ -1015,32 +1039,32 @@ StartSS:
                     Send {%w% Up}{Shift}
                 }
             }
-            If (SST = "Muay Thai") {
-                If (SSP = "Custom") {
+            if (SST = "Muay Thai") {
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}{%w% Down}
                     Sleep %path1%
                     Send {%w% Up}{Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}{%w% Down}
                     Sleep 1100
                     Send {%w% Up}{Shift}
                 }
             }
-            If (SST = "Advance Brawl") {
-                If (SSP = "Custom") {
+            if (SST = "Advance Brawl") {
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}{%d% Down}
                     Sleep %path1%
                     Send {%d% Up}{Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}{%d% Down}
                     Sleep 1800
                     Send {%d% Up}{Shift}
                 }
             }
-            If (SST = "Karate") {
-                If (SSP = "Custom") {
+            if (SST = "Karate") {
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}
                     Send {%d% Down}
@@ -1049,7 +1073,7 @@ StartSS:
                     Sleep %path2%
                     Send {%w% Up}
                     Send {Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}
                     Send {%d% Down}
                     Sleep 960
@@ -1059,14 +1083,14 @@ StartSS:
                     Send {Shift}
                 }
             }
-            If (SST = "Capoeira") {
-                If (SSP = "Custom") {
+            if (SST = "Capoeira") {
+                if (SSP = "Custom") {
                     Send {%s% Down}
                     Sleep %path1%
                     Send {%s% Up}{%d% Down}
                     Sleep 80
                     Send {%d% Up}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {%s% Down}
                     Sleep 1300
                     Send {%s% Up}{%d% Down}
@@ -1096,10 +1120,10 @@ StartSS:
                     Break
                 }
                 ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-                If (ErrorLevel = 0) {
+                if (ErrorLevel = 0) {
                     Gosub, Waitforcombat
                 }
-                If (A_Index >= 50) { ;; M1 over 50 time can be break
+                if (A_Index >= 50) { ;; M1 over 50 time can be break
                     MsgBox, You have been pushed
                     ;; webhook
                     ExitApp
@@ -1116,15 +1140,15 @@ StartSS:
                 ;; Combat
             }
             Send {BackSpace}
-            If (SST = "Boxing") {
-                If (SSP = "Custom") {
+            if (SST = "Boxing") {
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}{%s% Down}
                     Sleep %path2%
                     Send {%s% Up}{%a% Down}
                     Sleep %path1%
                     Send {%a% Up}{Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}{%s% Down}
                     Sleep 580
                     Send {%s% Up}{%a% Down}
@@ -1132,39 +1156,39 @@ StartSS:
                     Send {%a% Up}{Shift}
                 }
             }
-            If (SST = "Muay Thai") {
-                If (SSP = "Custom") {
+            if (SST = "Muay Thai") {
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}{%s% Down}
                     Sleep %path1%
                     Send {%s% Up}{Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}{%s% Down}
                     Sleep 1100
                     Send {%s% Up}{Shift}
                 }
             }
-            If (SST = "Advance Brawl") {
-                If (SSP = "Custom") {
+            if (SST = "Advance Brawl") {
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}{%a% Down}
                     Sleep %path1%
                     Send {%a% Up}{Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}{%a% Down}
                     Sleep 1800
                     Send {%a% Up}{Shift}
                 }
             }
-            If (SST = "Karate") {
-                If (SSP = "Custom") {
+            if (SST = "Karate") {
+                if (SSP = "Custom") {
                     ;; walking
                     Send {Shift}{%s% Down}
                     Sleep %path2%
                     Send {%s% Up}{%a% Down}
                     Sleep %path1%
                     Send {%a% Up}{Shift}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {Shift}{%s% Down}
                     Sleep 660
                     Send {%s% Up}{%a% Down}
@@ -1172,14 +1196,14 @@ StartSS:
                     Send {%a% Up}{Shift}
                 }
             }
-            If (SST = "Capoeira") {
-                If (SSP = "Custom") {
+            if (SST = "Capoeira") {
+                if (SSP = "Custom") {
                     Send {%a% Down}
                     Sleep 80
                     Send {%a% Up}{%w% Down}
                     Sleep %path1%
                     Send {%w% Up}
-                } else If (SSP = "Default") {
+                } else if (SSP = "Default") {
                     Send {%a% Down}
                     Sleep 80
                     Send {%a% Up}{%w% Down}
@@ -1191,7 +1215,7 @@ StartSS:
             TimeTotal := A_TickCount - SSTASK
             ;; convert ms to sec
             count++
-            If (SSALT = 1) AND (Webhook1 := true) {
+            if (SSALT = 1) AND (Webhook1 = true) {
                 cc=
                 (
                     {
@@ -1226,9 +1250,9 @@ StartSS:
                 WinHttpReq.Send(cc)
                 ToolTip, Send Log
             }
-            If (SSD = "Fatigue Estimate") {
+            if (SSD = "Fatigue Estimate") {
                 Round++
-                If (Round := vRound) {
+                if (Round := vRound) {
                     MsgBox, Auto leave 
                     ExitApp
                 }
@@ -1239,13 +1263,13 @@ StartSS:
             tooltip, not Found, 650, 600
             Sleep 100 
             Error++
-            If (Error > 30) {
+            if (Error > 30) {
                 ;; Pushed Away
 
             }
         }
         ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-        If (ErrorLevel = 0) {
+        if (ErrorLevel = 0) {
             Gosub, Waitforcombat
         }
 
@@ -1256,7 +1280,7 @@ Return
 ;; function
 
 WM_LBUTTONDOWN() {
-    If (A_Gui) {
+    if (A_Gui) {
         PostMessage, 0xA1, 2
     }
 }
@@ -1309,13 +1333,13 @@ runfunction(direction) {
     }
 }
 ;siderunfunction(direction) {
-;    If (direction = 1) { ; a key
+;    if (direction = 1) { ; a key
 ;        send, {down down}
 ;        sc("w", 3)sc("w", 1)sc("a", 1)
 ;        sleep 1000
 ;        sc("w", 2)sc("a", 2)
 ;        send {down up}
-;    } else If (direction = 2) {
+;    } else if (direction = 2) {
 ;        send, {down down}
 ;        sc("w", 3)sc("w", 1)sc("d", 1)
 ;        sleep 1000
@@ -1339,11 +1363,11 @@ walkfunction(direction) {
     }
 }
 sidewalkfunction(direction) {
-    If (direction = 1) { ; a key
+    if (direction = 1) { ; a key
         sc("a", 1)
         sleep 1000
         sc("a", 2)
-    } else If (direction = 2) {
+    } else if (direction = 2) {
         sc("d", 1)
         sleep 1000
         sc("d", 2)
@@ -1462,8 +1486,8 @@ LoadMainGui:
 
     Gui, Add, Text, xm+55 ym+50 vvvtext1,Rhythm Flow Options
     Gui, Add, DropDownList, vSPR,None|Rhythm|Rhythm+Flow
-    Gui, Add, Text, vvvtext2,What's Your Stamina Amount?
-    Gui, Add, DropDownList, vSPA ,High|Medium|Low
+    Gui, Add, Text, vvvtext2,What's Your Stamina Regen Rate?
+    Gui, Add, DropDownList, vSPA ,Super High|High|Medium|Low
 
     Gui, Add, Text, xm+250 ym+50 vvvtext3 ,Duration Options?
     Gui, Add, DropDownList,vSPD ,Macro Indefinitely|Fatigue estimate
@@ -1471,7 +1495,7 @@ LoadMainGui:
     Gui, Add, DropDownList, vSPE ,None|Slot Eat|Slot+Inventory 
 
     Gui, Add, Text,xm+445 ym+50 vvvtext5 ,Advance Options
-
+    Gui, Add, Checkbox, vSPASD ,Detect Stamina Freeze
     Gui, Add, Checkbox, vSPAWS ,Drain Move on 2
     Gui, Add, Checkbox, vSPASR ,Set Rest Delay
     Gui, Add, Checkbox, vSPAAC ,Auto Clip 
@@ -1508,7 +1532,7 @@ SubmitWebhook:
         UserID:="<@" UserID ">"
         WinHttpReq.Send(DiscordSend("tessstwoord",UserID))
         Msgbox, 4, Vivace's Macro, Did you receive the ping?
-        IfMsgBox no
+        ifMsgBox no
         {
             Reload
             ExitApp
@@ -1519,7 +1543,7 @@ SubmitWebhook:
     } else if (test = "") {
         MsgBox, 16, Vivace's Macro, Invalid link
         ExitApp
-    } else If (test = 0) {
+    } else if (test = 0) {
         MsgBox, 16, Vivace's Macro, Timed out
         ExitApp
     }
@@ -1595,10 +1619,12 @@ LoadData:
     IniRead, SPE, settings.ini, StrikePower, SPE
 
     ;; AdvStrikePower
+    ; SPASD = FREEZE STAM DETECTION
     ; SPAWS = Set Weave
     ; SPASR = Set Rest Delay
     ; SPAAC = Auto Clip
     ; SPAAL = Auto Leave
+    IniRead, SPASD, settings.ini, AdvStrikePower, SPASD
     IniRead, SPAWS, settings.ini, AdvStrikePower, SPAWS
     IniRead, SPASR, settings.ini, AdvStrikePower, SPASR
     IniRead, SPAAC, settings.ini, AdvStrikePower, SPAAC
@@ -1635,7 +1661,7 @@ git:
 Return
 test:
     Showthis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL" 
-    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,vvvtext1,vvvtext2,vvvtext3,vvvtext4,vvvtext5,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,SPASD,3button,vvvtext1,vvvtext2,vvvtext3,vvvtext4,vvvtext5,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
     Loop,Parse,Showthis,`,
     {
         GuiControl, Show, %A_LoopField%
@@ -1647,7 +1673,7 @@ test:
 Return
 test2:
     Showthis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL"
-    Hidethis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,vvvtext1,vvvtext2,vvvtext3,vvvtext4,vvvtext5,SSP,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
+    Hidethis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,SPASD,3button,vvvtext1,vvvtext2,vvvtext3,vvvtext4,vvvtext5,SSP,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
@@ -1658,7 +1684,7 @@ test2:
     }
 Return
 test3:
-    Showthis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
+    Showthis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,SPASD,3button"
     Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,vvvtext1,vvvtext2,vvvtext3,vvvtext4,vvvtext5,SSP,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
     Loop, Parse, Hidethis, `,
     {
@@ -1671,7 +1697,7 @@ test3:
 Return
 test4:
     Showthis:="vvvtext1,vvvtext2,vvvtext3,vvvtext4,vvvtext5,SSP,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
-    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,SPASD,3button"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
@@ -1691,7 +1717,8 @@ SetOptions:
     GuiControl,, WASR, %WASR%
     GuiControl,, WAAC, %WAAC%
     GuiControl,, WAAL, %WAAL%
-
+    
+    GuiControl,, SPASD ,%SPASD%
     GuiControl,, SPAWS, %SPAWS%
     GuiControl,, SPASR, %SPASR%
     GuiControl,, SPAAC, %SPAAC%
@@ -1722,7 +1749,7 @@ SetOptions:
 
 Return
 RecordStuff:
-    If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+    if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
         msgbox,,Vivace's Macro,You have incomplete information.
         ExitApp
     } else if (List != "" and List !="ERROR") {
@@ -1738,7 +1765,7 @@ Check:
     if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
         WinActivate
         WinGetPos,,,W,H,A
-        If ((W >= A_ScreenWidth ) & (H >= A_ScreenHeight)) {
+        if ((W >= A_ScreenWidth ) & (H >= A_ScreenHeight)) {
             Send {F11}
             Sleep 100
         }
@@ -1751,9 +1778,9 @@ Check:
     } 
 Return
 WaitTreadmill:
-    If (TASR = "0") {
+    if (TASR = "0") {
         DefaultWait:=9000
-    } else If (TASR = "1") {
+    } else if (TASR = "1") {
         DefaultWait:=TASRV
     }
     TimerSleep := A_TickCount
@@ -1762,13 +1789,13 @@ WaitTreadmill:
         TaskSleep := A_TickCount - TimerSleep
         TaskTimer := A_TickCount - TreadmillTask
         Tooltip, %TaskSleep% %TaskTimer%, 650, 600
-        If (TaskSleep > DefaultWait) {
+        if (TaskSleep > DefaultWait) {
             Break
         }
-        If (TaskTimer > 65000) {
+        if (TaskTimer > 65000) {
             Break
         }
-        If (TaskTimer > 55000) {
+        if (TaskTimer > 55000) {
             Click, 400, 290
         }
     }
@@ -1780,13 +1807,13 @@ WaitWeight:
     {
         TaskSleep := A_TickCount - TimerSleep  
         TaskTimer := A_TickCount - WeightTask
-        If (TaskTimer > 55000) {
+        if (TaskTimer > 55000) {
             Click, 400, 390
         }
-        If (TaskTimer > 70000) {
+        if (TaskTimer > 70000) {
             Break
         }
-        If (TaskSleep > DefaultWait) {
+        if (TaskSleep > DefaultWait) {
             Break
         }
     }
@@ -1803,12 +1830,12 @@ RecordUsername:
     Sleep 1000
     Send {o up}
 
-    If (RECTYPE = "Record") {
+    if (RECTYPE = "Record") {
         Send %RECKEY%
     }
 
     PixelSearch,,, 565, 90, 566, 91, 0xFFFFFF, 10
-    IF (ErrorLevel = 1) {
+    if (ErrorLevel = 1) {
         Send {Tab}
     }
     
@@ -1827,7 +1854,7 @@ RecordUsername:
 
     Gosub, CheckName
     
-    If (RECTYPE = "Record") {
+    if (RECTYPE = "Record") {
         Send %RECKEY%
     } else if (RECTYPE = "Shadow") {
         Send %RECKEY%
@@ -1845,8 +1872,8 @@ CheckName:
 Return
 Waitforcombat:
     ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-    If (ErrorLevel = 0) {
-        If (Webhook1 := true) {
+    if (ErrorLevel = 0) {
+        if (Webhook1 = true) { 
             WinHttpReq.Send(DiscordSend("You are attacked`, Start Emergency Function",UserID))
         }
         tooltip found combat, 650, 600
@@ -1854,11 +1881,11 @@ Waitforcombat:
         {
             Sleep 30
             ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-            If (ErrorLevel = 1) {
+            if (ErrorLevel = 1) {
                 Break
-            } else If (ErrorLevel = 0) {
+            } else if (ErrorLevel = 0) {
                 PixelSearch,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
-                If (ErrorLevel = 1) { ;; if stam enough
+                if (ErrorLevel = 1) { ;; if stam enough
                     Gosub, Combat1
                 } else if (ErrorLevel = 0) { ;; if low stam walk
                     Loop, 5
@@ -1868,34 +1895,33 @@ Waitforcombat:
                 }
             }
             ImageSearch,,, 670, 45, 755, 55, *5 bin\Common use\gripped.bmp
-            If (ErrorLevel = 0) {
+            if (ErrorLevel = 0) {
                 WinHttpReq.Send(DiscordSend("You are gripped. Auto Log in 10 Seconds", UserID))
                 Sleep 10000
                 Process, Close, RobloxPlayerBeta.exe
                 Return
             }
         } 
-        
     }
     CombatTask := A_TickCount
     Loop,
     {
         ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-        If (ErrorLevel = 0) {
+        if (ErrorLevel = 0) {
             Goto, Waitforcombat
         }
         tooltip, Combat Is Gone, 650, 600
     } Until A_TickCount - CombatTask > 5000
     tooltip, Combat Is Gone, 650, 600
-    If (Webhook1 := true) {
+    if (Webhook1 = true) { 
         WinHttpReq.Send(DiscordSend("Combat is gone`, resumed macroing. Please check if you are in correct position",UserID))
     }
 Return
 Combat1:
     Random, oVar, 1, 2
-    If (oVar = 1) {
+    if (oVar = 1) {
         Random, oVar, 1, 2
-        If (oVar = 2) {
+        if (oVar = 2) {
             Random, oVar, 1, 2
             sidewalkfunction(oVar)
             ;siderunfunction(oVar)
@@ -1903,14 +1929,14 @@ Combat1:
             Random, oVar, 1, 2
             runfunction(oVar)
         } 
-    } else If (oVar = 2) {
+    } else if (oVar = 2) {
         Random, oVar, 1, 4
         dash(oVar)
     }
 return
 Combat2:
     Random, oVar, 1, 2
-    If (oVar = 2) {
+    if (oVar = 2) {
         Random, oVar, 1, 2
         sidewalkfunction(oVar)
     } else if (oVar = 1) {
@@ -1922,11 +1948,11 @@ sendrhythm:
     sendsc("r")
 Return
 WaitSp:
-    If (SPASR = "0") {
+    if (SPASR = "0") {
         SetTimer, findc, 9000
         Sleep 9000
         ;; loop check combat here
-    } else If (SPASR = "1") {
+    } else if (SPASR = "1") {
         SetTimer, findc, %SPSRV%
         Sleep %SPSRV%
         ;; loop check combat here
@@ -1935,8 +1961,8 @@ WaitSp:
 Return  
 findc:
     ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
-    If (ErrorLevel = 0) {
-        If (TAAC = 1) {
+    if (ErrorLevel = 0) {
+        if (TAAC = 1) {
             Gosub, RecordUsername
         }
         Gosub, Waitforcombat
@@ -2886,7 +2912,7 @@ Ocr(ok, offsetX:=20, offsetY:=20, overlapW:=0)
       Break
     if (ocr_X="")
       ocr_X:=LeftX, min_Y:=LeftY, max_Y:=LeftY+LeftH
-    ; If the interval exceeds the set value, add "*" to the result
+    ; if the interval exceeds the set value, add "*" to the result
     ocr_Text.=(ocr_Text!="" and LeftX>dx ? "*":"") . LeftOCR
     ; Update for next search
     min_X:=LeftX+LeftW-(overlapW>LeftW//2 ? LeftW//2:overlapW)
@@ -3178,7 +3204,7 @@ ShowScreenShot(x1:=0, y1:=0, x2:=0, y2:=0, ScreenShot:=1)
   this.CopyBits(Scan0,Stride,0,0,bits.Scan0,bits.Stride,x,y,w,h)
   ;---------------
   Gui, FindText_Screen: +LastFoundExist
-  IfWinNotExist
+  ifWinNotExist
   {
     Gui, FindText_Screen: +AlwaysOnTop -Caption +ToolWindow -DPIScale +E0x08000000
     Gui, FindText_Screen: Margin, 0, 0
@@ -3324,7 +3350,7 @@ Class Thread
   {
     DetectHiddenWindows, On
     WinWait, % "ahk_pid " this.pid,, 0.5
-    IfWinExist, % "ahk_class AutoHotkey ahk_pid " this.pid
+    ifWinExist, % "ahk_class AutoHotkey ahk_pid " this.pid
     {
       PostMessage, 0x111, 65307
       WinWaitClose,,, 0.5
@@ -3980,9 +4006,9 @@ Gui(cmd, arg1:="")
     ;----------------------
     if GetKeyState("Ctrl")
       Send {Ctrl Up}
-    Gui, FindText_HotkeyIf: New, -Caption +ToolWindow +E0x80000
-    Gui, Show, NA x0 y0 w0 h0, FindText_HotkeyIf
-    Hotkey, IfWinExist, FindText_HotkeyIf
+    Gui, FindText_Hotkeyif: New, -Caption +ToolWindow +E0x80000
+    Gui, Show, NA x0 y0 w0 h0, FindText_Hotkeyif
+    Hotkey, ifWinExist, FindText_Hotkeyif
     For k,v in StrSplit("RButton|Up|Down|Left|Right","|")
     {
       if GetKeyState(v)
@@ -4047,8 +4073,8 @@ Gui(cmd, arg1:="")
     this.RangeTip()
     For k,v in StrSplit("RButton|Up|Down|Left|Right","|")
       Hotkey, *%v%, %Gui_Off%, Off UseErrorLevel
-    Hotkey, IfWinExist
-    Gui, FindText_HotkeyIf: Destroy
+    Hotkey, ifWinExist
+    Gui, FindText_Hotkeyif: Destroy
     if (ShowScreenShot)
       this.ShowPic()
     if (!show_gui)
@@ -4132,7 +4158,7 @@ Gui(cmd, arg1:="")
       . "|" GetKeyState("Ctrl")
   Case "SelectPic":
     Gui, FindText_SelectPic: +LastFoundExist
-    IfWinExist
+    ifWinExist
       return
     Pics:=[], Names:=[], s:=""
     Loop Files, % A_Temp "\Ahk_ScreenShot\*.bmp"
@@ -4182,7 +4208,7 @@ Gui(cmd, arg1:="")
     {
       pos:=%Gui_%("GetRange")
       MsgBox, 4100, Tip, % Lang["s15"] " !"
-      IfMsgBox, Yes
+      ifMsgBox, Yes
         Break
     }
     %Gui_%("ScreenShot", pos[1] "|" pos[2] "|" pos[3] "|" pos[4] "|0")
@@ -4252,9 +4278,9 @@ Gui(cmd, arg1:="")
     if GetKeyState("Ctrl")
       Send {Ctrl Up}
     hk:="", State:=%Gui_%("State",1)
-    Gui, FindText_HotkeyIf: New, -Caption +ToolWindow +E0x80000
-    Gui, Show, NA x0 y0 w0 h0, FindText_HotkeyIf
-    Hotkey, IfWinExist, FindText_HotkeyIf
+    Gui, FindText_Hotkeyif: New, -Caption +ToolWindow +E0x80000
+    Gui, Show, NA x0 y0 w0 h0, FindText_Hotkeyif
+    Hotkey, ifWinExist, FindText_Hotkeyif
     Hotkey, *LButton, %Gui_Off%, On UseErrorLevel
     Hotkey, *LButton Up, %Gui_Off%, On UseErrorLevel
     CoordMode, Mouse
@@ -4292,8 +4318,8 @@ Gui(cmd, arg1:="")
     this.RangeTip()
     Hotkey, *LButton, %Gui_Off%, Off UseErrorLevel
     Hotkey, *LButton Up, %Gui_Off%, Off UseErrorLevel
-    Hotkey, IfWinExist
-    Gui, FindText_HotkeyIf: Destroy
+    Hotkey, ifWinExist
+    Gui, FindText_Hotkeyif: Destroy
     Gui, FindText_GetRange: Destroy
     Clipboard:=p:=x ", " y ", " (x+w-1) ", " (y+h-1)
     if (!show_gui)
@@ -4451,9 +4477,9 @@ Gui(cmd, arg1:="")
     if GetKeyState("Ctrl")
       Send {Ctrl Up}
     hk:="", State:=%Gui_%("State")
-    Gui, FindText_HotkeyIf: New, -Caption +ToolWindow +E0x80000
-    Gui, Show, NA x0 y0 w0 h0, FindText_HotkeyIf
-    Hotkey, IfWinExist, FindText_HotkeyIf
+    Gui, FindText_Hotkeyif: New, -Caption +ToolWindow +E0x80000
+    Gui, Show, NA x0 y0 w0 h0, FindText_Hotkeyif
+    Hotkey, ifWinExist, FindText_Hotkeyif
     Hotkey, *RButton, %Gui_Off%, On UseErrorLevel
     CoordMode, Mouse
     oldx:=oldy:=""
@@ -4477,8 +4503,8 @@ Gui(cmd, arg1:="")
     ToolTip
     Critical
     Hotkey, *RButton, %Gui_Off%, Off UseErrorLevel
-    Hotkey, IfWinExist
-    Gui, FindText_HotkeyIf: Destroy
+    Hotkey, ifWinExist
+    Gui, FindText_Hotkeyif: Destroy
     this.BindWindow(0), cors.bind:=bind_mode
     return
   Case "MySlider1","MySlider2":
@@ -4992,7 +5018,7 @@ Gui(cmd, arg1:="")
     return
   Case "ToolTip":
     MouseGetPos,,, _TT
-    IfWinExist, ahk_id %_TT% ahk_class AutoHotkeyGUI
+    ifWinExist, ahk_id %_TT% ahk_class AutoHotkeyGUI
       ToolTip, % Tip_Text[PrevControl]
     return
   Case "ToolTipOff":
@@ -5120,7 +5146,7 @@ s11 = Please Set Gray Difference First
 s12 = Please select the core color first
 s13 = Please convert the image to black or white first
 s14 = Can't be used in ColorPos mode, because it can cause position errors
-s15 = Are you sure about the scope of your choice?\n\nIf not, you can choose again
+s15 = Are you sure about the scope of your choice?\n\nif not, you can choose again
     )"
     Lang:=[], Tip_Text:=[]
     Loop Parse, s, `n, `r
