@@ -1,7 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
-currentversion:= "2.0.8"
+currentversion:= "2.0.9"
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://pastebin.com/raw/BSYvTnMQ", true)
 whr.Send()
@@ -45,7 +45,7 @@ if !FileExist("settings.ini") {
         Gosub, CreateWebhookGui
         Return
     } else {
-        Webhook1 = true
+        Webhook1 := "checked"
         Goto, main
     }
 }
@@ -60,7 +60,7 @@ return
 
 main:
 {
-    if (Webhook1 = true) { ;; making thing ready
+    if (Webhook1 = "checked") { ;; making thing ready
         MsgBox, webhook is enabled
         WinHttpReq := ComObjCreate("WinHttp.WinHttpRequest.5.1")
         WinHttpReq.Open("POST", Webhook, true) 
@@ -237,7 +237,7 @@ StartTread:
                     }
                 } ;; after not found anything
                 if (TE = "Slot Eat") {
-                    if (Webhook1 = true) { 
+                    if (Webhook1 = "checked") { 
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                         if (TAAL = 1) {
                             Sleep 10000
@@ -265,14 +265,14 @@ StartTread:
                             xx:=xx+70
                         } else if (ErrorLevel = 1) {
                             if (A_Index = 1) {
-                                if (Webhook1 = true) { 
+                                if (Webhook1 = "checked") { 
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
                                 if (TAAL = 1) {
                                     Sleep 10000
                                     Process, Close, RobloxPlayerBeta.exe
                                 }
-                                if (Webhook1 = true) { 
+                                if (Webhook1 = "checked") { 
                                     if (TAAL = 1) {
                                         WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
                                     } else if (TAAL = 0) {
@@ -337,9 +337,9 @@ StartTread:
                         Break
                     } else if (ErrorLevel = 1) {
                         if (A_Index = 5) {
-                            if (Webhook1 = true) { 
+                            if (Webhook1 = "checked") { 
                                 WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID))
-                            } else if (Webhook1 = false) {
+                            } else if (Webhook1 = "nah") {
                                 MsgBox, Not Found ;; Send Webhook and stop
                             }
                         }
@@ -590,30 +590,30 @@ StartSP:
                         if (SPA = "Low") {
                             PixelSearch,,, 185, 130, 186, 131, 0x3A3A3A, 40, Fast
                             if (ErrorLevel = 0) {
-                                found = true
+                                found := "checked"
                                 Break
                             }
                         } else if (SPA = "Medium") {
                             PixelSearch,,, 165, 130, 166, 131, 0x3A3A3A, 40, Fast
                             if (ErrorLevel = 0) {
-                                found = true
+                                found := "checked"
                                 Break
                             }
                         } else if (SPA = "High") {
                             PixelSearch,,, 145, 130, 146, 131, 0x3A3A3A, 40, Fast
                             if (ErrorLevel = 0) {
-                                found = true
+                                found := "checked"
                                 Break
                             }
                         } else if (SPA = "Super High") { ; 4k stam 0 sp :skull: 
                             PixelSearch,,, 75, 130, 76, 131, 0x3A3A3A, 40, Fast
                             if (ErrorLevel = 0) {
-                                found = true
+                                found := "checked"
                                 Break
                             }
                         }
                     }
-                    if (found = true) {
+                    if (found = "checked") {
                         w := format("sc{:x}", getKeySC("w"))
                         SendInput, {%w% Up}
                         if (SPR = "Rhythm") or (SPR = "Rhythm+Flow") {
@@ -713,7 +713,7 @@ StartSP:
                     }
                 } ;; after not found anything
                 if (SPE = "Slot Eat") {
-                    if (Webhook1 = true) { 
+                    if (Webhook1 = "checked") { 
                         WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                         Sleep 100
                         if (SPAAL = 1) {
@@ -745,7 +745,7 @@ StartSP:
                             xx:=xx+70
                         } else if (ErrorLevel = 1) {
                             if (A_Index = 1) {
-                                if (Webhook1 = true) { 
+                                if (Webhook1 = "checked") { 
                                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                                 }
                                 MsgBox, Out of food
@@ -753,7 +753,7 @@ StartSP:
                                     Sleep 10000
                                     Process, Close, RobloxPlayerBeta.exe
                                 }
-                                if (Webhook1 = true) { 
+                                if (Webhook1 = "checked") { 
                                     if (SPAAL = 1) {
                                         WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
                                     } else if (SPAAL = 0) {
@@ -820,9 +820,9 @@ StartWeight:
                             Break
                         } else if (ErrorLevel = 1) {
                             if (A_Index = 5) {
-                                if (Webhook1 = true) { 
+                                if (Webhook1 = "checked") { 
                                     WinHttpReq.Send(DiscordSend("You are pushed away from Weight",UserID))
-                                } else if (Webhook1 = false) {
+                                } else if (Webhook1 = "nah") {
                                     MsgBox, Not Found ;; Send Webhook and stop
                                 }
                             }
@@ -1215,7 +1215,7 @@ StartSS:
             TimeTotal := A_TickCount - SSTASK
             ;; convert ms to sec
             count++
-            if (SSALT = 1) AND (Webhook1 = true) {
+            if (SSALT = 1) AND (Webhook1 = "checked") {
                 cc=
                 (
                     {
@@ -1523,7 +1523,7 @@ Return
 SubmitWebhook:
     Gui, Submit
     Gui, Destroy
-    Webhook1 = true
+    Webhook1 := "checked"
     test:=GetUrlStatus(Webhook, 10)
     if (test = 200) {
         WinHttpReq := ComObjCreate("WinHttp.WinHttpRequest.5.1")
@@ -1551,7 +1551,7 @@ SubmitWebhook:
 Return
 NotSubmitWebhook:
     Gui, Destroy
-    Webhook1 = false
+    Webhook1 := "nah"
     goto, main
 Return
 CreateWebhookGui:
@@ -1873,7 +1873,7 @@ Return
 Waitforcombat:
     ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
     if (ErrorLevel = 0) {
-        if (Webhook1 = true) { 
+        if (Webhook1 = "checked") { 
             WinHttpReq.Send(DiscordSend("You are attacked`, Start Emergency Function",UserID))
         }
         tooltip found combat, 650, 600
@@ -1913,7 +1913,7 @@ Waitforcombat:
         tooltip, Combat Is Gone, 650, 600
     } Until A_TickCount - CombatTask > 5000
     tooltip, Combat Is Gone, 650, 600
-    if (Webhook1 = true) { 
+    if (Webhook1 = "checked") { 
         WinHttpReq.Send(DiscordSend("Combat is gone`, resumed macroing. Please check if you are in correct position",UserID))
     }
 Return
