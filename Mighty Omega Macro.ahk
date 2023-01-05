@@ -3,7 +3,7 @@
 SetCapsLockState, Off 
 SetBatchLines -1
 SoundPlay, creamLib\Sound\uwu.mp3
-Version = 2.1.0
+Version = 2.1.1
 if (A_ScreenDPI != 96) {
     Run, ms-settings:display
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
