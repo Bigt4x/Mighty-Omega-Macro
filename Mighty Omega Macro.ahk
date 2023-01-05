@@ -680,9 +680,9 @@ SP:
         }
         ImageSearch,,, 20, 120, 260, 140, *20 creamLib\BasicUI\Stamina.bmp
         If (ErrorLevel = 0) {
-            Sleep 1000
+            Sleep, 1000
             SendInput, % sw("s", "down")sw("w")sw("w", "down")
-            Sleep 3000
+            Sleep, 8000
             Loop,
             {
                 Switch SP8 {
