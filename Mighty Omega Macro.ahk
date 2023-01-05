@@ -648,7 +648,7 @@ SP:
     {
         ImageSearch,,, 20, 120, 260, 140, *20 creamLib\BasicUI\Stamina.bmp
         If (ErrorLevel = 0) {
-            SendInput, % sw("w")sw("w", "down")
+            SendInput, % sw("s", "down")sw("w")sw("w", "down")
             Loop,
             {
                 Switch SP8 {
@@ -657,7 +657,7 @@ SP:
                     case "Slow"     : PixelSearch,,, 185, 130, 186, 131, 0x3A3A3A, 40
                 }
                 If (ErrorLevel = 0) {
-                    SendInput, % sw("w", "up")sw("BackSpace")sw("1")
+                    SendInput, % sw("w", "up")sw("s","up")sw("BackSpace")sw("1")
                     If (SP2 = "Rhythm") or (SP2 = "Flow") {
                         SetTimer, PressR, -400
                     }
@@ -666,15 +666,19 @@ SP:
                 }
             }
         } else {
-            Notify("Freeze: " CheckTimer)
-            Notify("Reset: " Timer)
-            If (CheckTimer > 300000) { ; 5 Minute
+            Notify("Freeze: " A_TickCount - CheckTimer)
+            Notify("Reset: " A_TickCount - Timer)
+            IniRead, allowed, settings.ini, Additional_Settings, SPFreeze
+            If (allowed = "ERROR") or (!allowed) {
+                IniWrite, "true", settings.ini, Additional_Settings, SPFreeze
+            }
+            If (A_TickCount - CheckTimer > 300000) and (allowed = "true") { ; 5 Minute
                 ; Inf Stam
                 Notify("Stam Freeze")
                 Ping("Your Stamina Is Freezing / Been Hitting for over 5 Minute Straight Without Reset Stamina") Exit(SP10)
             }
-            If (Timer < 30000) { ; this is mean been hitting with over stamnina rate for 30 sec to restart run
-                Click, 50
+            If (A_TickCount - Timer < 30000) { ; this is mean been hitting with over stamnina rate for 30 sec to restart run
+                Click, 80
                 Click, Right
                 Round++
             } else {
