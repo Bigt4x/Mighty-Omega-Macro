@@ -640,15 +640,49 @@ SP:
     notify("Equip your combat")
     notify("and have shift lock on")
     notify("press k to continue")
+    if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
+        WinActivate
+        WinGetPos,,,W,H,A
+        if ((W >= A_ScreenWidth) & (H >= A_ScreenHeight)) {
+            Send, % sw("F11")
+            Sleep, 1000
+        }
+        if ((W > 816) & ( H > 638)) {
+            WinMove, Ahk_exe RobloxPlayerBeta.exe,,,, 800, 599 
+            Notify("Resized Window")
+        }
+    } else {
+        MsgBox,,Vivace's Macro,Roblox not active,3
+        ExitApp
+    }
+    Winactive("Roblox")
     Pause
     global recordingtype := SP12
     Tagfunc := Func("Tag").Bind(List, SP10)
     SetTimer, %Tagfunc% , 1000
+    Winactive("Roblox")
     Loop,
     {
+        if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
+            WinActivate
+            WinGetPos,,,W,H,A
+            if ((W >= A_ScreenWidth) & (H >= A_ScreenHeight)) {
+                Send, % sw("F11")
+                Sleep, 1000
+            }
+            if ((W > 816) & ( H > 638)) {
+                WinMove, Ahk_exe RobloxPlayerBeta.exe,,,, 800, 599 
+                Notify("Resized Window")
+            }
+        } else {
+            MsgBox,,Vivace's Macro,Roblox not active,3
+            ExitApp
+        }
         ImageSearch,,, 20, 120, 260, 140, *20 creamLib\BasicUI\Stamina.bmp
         If (ErrorLevel = 0) {
+            Sleep 1000
             SendInput, % sw("s", "down")sw("w")sw("w", "down")
+            Sleep 3000
             Loop,
             {
                 Switch SP8 {
@@ -657,11 +691,16 @@ SP:
                     case "Slow"     : PixelSearch,,, 185, 130, 186, 131, 0x3A3A3A, 40
                 }
                 If (ErrorLevel = 0) {
-                    SendInput, % sw("w", "up")sw("s","up")sw("BackSpace")sw("1")
+                    SendInput, % sw("w", "up")sw("s", "up")sw("BackSpace")sw("1")
                     If (SP2 = "Rhythm") or (SP2 = "Flow") {
                         SetTimer, PressR, -400
                     }
                     Timer := A_TickCount, CheckTimer := A_TickCount
+                    Break
+                }
+                ImageSearch,,, 20, 120, 260, 140, *20 creamLib\BasicUI\Stamina.bmp
+                If (ErrorLevel = 0) {
+                    SendInput, % sw("w", "up")sw("s", "up")
                     Break
                 }
             }
@@ -708,6 +747,7 @@ SP:
                 case "Medium"   : Sleep, 7000
                 case "Slow"     : Sleep, 8000
             }
+            CheckTimer := A_TickCount, Timer := A_TickCount
         }
         If (SP6 = "Fatigue Estimate") {
             Notify("Auto Leave " Round "/" MaxRound)
@@ -748,6 +788,7 @@ SP:
             }
             ImageSearch,,, 40, 135, 50, 150, *30 creamLib\BasicUI\Hunger.bmp
             If (ErrorLevel = 0) {
+                SendInput, % sw("Shift")
                 Switch Eat(i, SP4) {
                     Case "Empty" : Ping("Food Ranout") Exit(SP10)
                     Case "Timeout" : Ping("Eat Timeout") Exit(SP10)
@@ -756,12 +797,14 @@ SP:
                 If (SP2 = "Rhythm") or (SP2 = "Flow") {
                     SetTimer, PressR, -400
                 }
+                SendInput, % sw("Shift")
                 Timer := A_TickCount, CheckTimer := A_TickCount
             }
         }
         If (SP2 = "Flow") {
+            ImageSearch,,, 390, 115, 430, 180, *10 creamLib\BasicUI\flowstate.bmp
             If (ErrorLevel = 0) {
-                Sendinput, % sw("e")
+                Sendinput, % sw("t")
                 Sleep 200
             }
         }
@@ -1085,13 +1128,13 @@ Dura:
     If (d4 := "Rhythm") {
         f(LeftPID)
         SendInput, {Backspace}1 
-        Sleep 1000
+        Sleep 400
         Sendinput, r
     }
     If (d12 := "Rhythm") {
         f(RightPID)
         SendInput, {Backspace}1 
-        Sleep 1000
+        Sleep 400
         Sendinput, r
     }
     Loop
@@ -1130,7 +1173,7 @@ Dura:
             f(LeftPID)
             Click, 50, 470, 30
             SendInput, {Backspace}1 
-            Sleep 1000
+            Sleep 400
             If (d4 := "Rhythm") {
                 Sendinput, r
             } 
