@@ -3,7 +3,7 @@
 SetCapsLockState, Off 
 SetBatchLines -1
 SoundPlay, creamLib\Sound\uwu.mp3
-Version = 2.1.1
+Version = 2.1.2
 if (A_ScreenDPI != 96) {
     Run, ms-settings:display
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
@@ -52,7 +52,7 @@ switch CheckforWebhook() {
         Notify("Enter UserID")
         InputBox, UserID, Enter User ID,,, 300 , 100
         If (!UserID) or (!Webhook) {
-            Notify("nil")
+            Notify("No Webhook")
             MsgBox,,Vivace's Macro, Are you sure? No webhook?
         } else if (Webhook) And (UserID) {
             UserID := "<@" UserID ">"
@@ -359,13 +359,14 @@ Treadmill:
         Wait := A_TickCount
         Loop 
         {
-            PixelSearch,,, 350, 250, 351, 251, 0x5A5A5A, 30
-        } Until (A_TickCount - Wait > 1000) or (ErrorLevel = 0)
+            If (GetColors(350, 250, "0x5A5A5A", 30)) {
+                Break
+            }
+        } Until (A_TickCount - Wait > 1000)
         Wait := A_TickCount
         Loop,
         {
-            PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30
-            If (ErrorLevel = 0) {
+            If (GetColors(350, 250, "0x98FF79", 30)) {
                 Break
             }
             Switch T4 {
@@ -410,11 +411,11 @@ Treadmill:
                 }
             }
             Switch T10 {
-                case "High 1k+": PixelSearch ,,, 30, 130, 36, 133, 0x3A3A3A, 40
-                case "Medium 600-1k": PixelSearch ,,, 30, 130, 46, 133, 0x3A3A3A, 40  
-                case "Low >600": PixelSearch ,,, 30, 130, 56, 133, 0x3A3A3A, 40
+                case "High 1k+": ErrLevel := GetColors(30, 130, "0x3A3A3A", 40)
+                case "Medium 600-1k": ErrLevel := GetColors(40, 130, "0x3A3A3A", 40) 
+                case "Low >600": ErrLevel := GetColors(50, 130, "0x3A3A3A", 40)
             }
-            If (ErrorLevel = 0) {
+            If (ErrLevel) {
                 If (T10 != "Do nothing") {
                     Notify("Wait, " Delay1)
                     Now := A_TickCount
@@ -446,7 +447,7 @@ Treadmill:
                 {			
                     Click , 409, 296
                     Click , 409, 295
-                } Until A_TickCount - UpTreadmill > 1500
+                } Until (A_TickCount - UpTreadmill > 1500)
             }
         }
         If (T8 = "Fatigue Estimate") {
@@ -498,8 +499,7 @@ Weight:
         Wait := A_TickCount
         Loop,
         {
-            PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30
-            If (ErrorLevel = 0) {
+            If (GetColors(410, 355, "0x98FF79", 40)) {
                 Break
             }
             Switch W2 {
@@ -528,6 +528,7 @@ Weight:
         Timer := A_TickCount
         Loop,
         {
+            SetMouseDelay, -1
             ImageSearch,x, y, 250, 220, 570, 470, *20 creamLib\TrainingIcon\WeightButton.bmp
             If (ErrorLevel = 0) {
                 MouseMove, x, y, 0
@@ -536,11 +537,11 @@ Weight:
                 MouseMove, 409, 491
             }
             Switch W8 {
-                case "High 1k+": PixelSearch ,,, 30, 130, 36, 133, 0x3A3A3A, 40
-                case "Medium 600-1k": PixelSearch ,,, 30, 130, 46, 133, 0x3A3A3A, 40  
-                case "Low >600": PixelSearch ,,, 30, 130, 56, 133, 0x3A3A3A, 40
+                case "High 1k+": ErrLevel := GetColors(30, 130, "0x3A3A3A", 40)
+                case "Medium 600-1k": ErrLevel := GetColors(40, 130, "0x3A3A3A", 40)
+                case "Low >600": ErrLevel := GetColors(50, 130, "0x3A3A3A", 40)
             }
-            If (ErrorLevel = 0) {
+            If (ErrLevel) {
                 If (W8 != "Do nothing") {
                     Notify("Wait, 7000")
                     Now := A_TickCount
@@ -568,7 +569,7 @@ Weight:
                     Click, 410, 460
                     Sleep, 1000
                     Sendinput, {Backspace}1
-                    Sleep 150
+                    Sleep, 150
                     ImageSearch,,, 65, 525, 750, 585, creamLib\BasicUI\3x2.bmp
                     If (ErrorLevel = 1) { 
                         notify("protein has ranout from inventory")
@@ -579,7 +580,7 @@ Weight:
                         waittime := A_TickCount
                         Loop,
                         {
-                            Sleep 100
+                            Sleep, 100
                             ImageSearch,,, 0, 145, 70, 170, *10 creamLib\BasicUI\DrinkStatus1.bmp
                         } Until (ErrorLevel = 0) or (A_TickCount - waittime > 12000)
                         notify("dranked protein")
@@ -589,7 +590,7 @@ Weight:
                         {			
                             Click , 409, 490
                             Click , 409, 491
-                        } Until A_TickCount - UpWeight > 1500
+                        } Until (A_TickCount - UpWeight > 1500)
                     }
                 }
             } else {
@@ -610,7 +611,7 @@ Weight:
                 {			
                     Click , 409, 490
                     Click , 409, 491
-                } Until A_TickCount - UpWeight > 1500
+                } Until (A_TickCount - UpWeight > 1500)
             }
         }
         If (W6 = "Fatigue Estimate") {
@@ -686,11 +687,11 @@ SP:
             Loop,
             {
                 Switch SP8 {
-                    case "Fast"     : PixelSearch,,, 145, 130, 146, 131, 0x3A3A3A, 40
-                    case "Medium"   : PixelSearch,,, 165, 130, 166, 131, 0x3A3A3A, 40
-                    case "Slow"     : PixelSearch,,, 185, 130, 186, 131, 0x3A3A3A, 40
+                    case "Fast"     : ErrLevel := GetColors(145, 130, "0x3A3A3A", 40)
+                    case "Medium"   : ErrLevel := GetColors(165, 130, "0x3A3A3A", 40)
+                    case "Slow"     : ErrLevel := GetColors(185, 130, "0x3A3A3A", 40)
                 }
-                If (ErrorLevel = 0) {
+                If (ErrLevel) {
                     SendInput, % sw("w", "up")sw("s", "up")sw("BackSpace")sw("1")
                     If (SP2 = "Rhythm") or (SP2 = "Flow") {
                         SetTimer, PressR, -400
@@ -730,18 +731,17 @@ SP:
                 } 
             }
             Switch SP8 {
-                case "Fast"     : PixelSearch,,, 145, 130, 146, 131, 0x3A3A3A, 40
-                case "Medium"   : PixelSearch,,, 165, 130, 166, 131, 0x3A3A3A, 40
-                case "Slow"     : PixelSearch,,, 185, 130, 186, 131, 0x3A3A3A, 40
+                case "Fast"     : ErrLevel := GetColors(145, 130, "0x3A3A3A", 40)
+                case "Medium"   : ErrLevel := GetColors(165, 130, "0x3A3A3A", 40)
+                case "Slow"     : ErrLevel := GetColors(185, 130, "0x3A3A3A", 40)
             }
-            If (ErrorLevel = 0) {
+            If (ErrLevel) {
                 Timer := A_TickCount
             } else {
                 CheckTimer := A_TickCount
             }
         }
-        PixelSearch ,,, 30, 130, 36, 133, 0x3A3A3A, 40
-        If (ErrorLevel = 0) {
+        If (GetColors(35, 130, "0x3A3A3A", 40)) {
             Switch SP8 {
                 case "Fast"     : Sleep, 6000
                 case "Medium"   : Sleep, 7000
@@ -840,14 +840,7 @@ muscle:
     Gui, Show, ,Vivace's Muscle Macro
     WinWaitClose, Vivace's Muscle Macro
     CheckVars([v1,v2,v3,v4], "Muscle")
-    /*
-        v1 = Click interval
-        v2 = Auto Eat
-        v3 = Duration
-        v4 = Auto Leave
-    */
     If (v3 = "Fatigue Estimate") {
-        ; Use Timer
         InputBox, EndTime, Enter Time
         If (ErrorLevel = 1) {
             Msgbox, Missing infomation
@@ -857,8 +850,11 @@ muscle:
     }
     WinActivate, Ahk_exe RobloxPlayerBeta.exe
     Sendinput, % sw("BackSpace")sw("1")
+    CoordMode, Pixel, Window
+    CoordMode, Mouse, Window
     Loop,
     {
+        SetMouseDelay, -1
         if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
             WinActivate
             WinGetPos,,,W,H,A
@@ -880,14 +876,19 @@ muscle:
             }
         }
         Click, 65, 470
-        Sleep, % v1
-        PixelSearch,,, 30, 130, 65, 133, 0x3A3A3A, 40
-        If (ErrorLevel = 0) {
+        Notify("Wait " v1 " " A_Index)
+        Sleep % v1
+        If (GetColors(65, 130, "0x3A3A3A", 40)) {
             lllll := A_TickCount
+            Notify("Low Stam")
             Loop,
             {
                 ImageSearch,,, 20, 120, 260, 140, *20 creamLib\BasicUI\Stamina.bmp
-            } Until (ErrorLevel = 0) or (lllll > 20000)
+                If (ErrorLevel = 0) {
+                    Break
+                }
+                Sleep 1000
+            } Until (A_TickCount - lllll > 20000)
         }
         ImageSearch,,, 40, 135, 50, 150, *30 creamLib\BasicUI\Hunger.bmp
         If (ErrorLevel = 0) {
@@ -1040,7 +1041,7 @@ SS:
                 case "Muay Thai" : Sendinput, % sw("s", "up")sw("Shift")
                 case "Advance Brawl" : Sendinput, % sw("a", "up")sw("Shift")
                 case "Karate" : Sendinput, % sw("a", "up")sw("Shift")
-                case "Boxing" : Sendinput, % sw("s", "up")sw("Shift")
+                case "Boxing" : Sendinput, % sw("a", "up")sw("Shift")
                 case "Capoeira" : Sendinput, % sw("w", "up")
             }
             TimeTotal := A_TickCount - Timer
@@ -1370,7 +1371,7 @@ Eat(i, v) {
 		If (ErrorLevel = 1) { 
 			Return "Success"
 		}
-	} Until EatingTask - A_TickCount > 60000
+	} Until (EatingTask - A_TickCount > 60000)
 	Return "Timeout"
 }
 
@@ -1392,8 +1393,7 @@ Tag(v = "", i = "") {
         Notify("Found Combat Tag")
         Ping("You are attacked`, start avoiding enemies")
         if (recordingtype != "Do nothing") {
-            PixelSearch,,, 565, 90, 566, 91, 0xFFFFFF, 10
-            if (ErrorLevel = 1) {
+            if (GetColors(565, 90, "0xFFFFFF", 10)) {
                 Sendinput, {Tab}
             }
             If (v = "Record") {
@@ -1427,13 +1427,12 @@ Tag(v = "", i = "") {
         }
         Loop,
         { 
-            PixelSearch,,, 30, 130, 56, 133, 0x3A3A3A, 40
-            If (ErrorLevel = 0) {
+            If (GetColors(50, 130, "0x3A3A3A", 40)) {
                 Loop, 5
                 {
                     Evasive("Walk")
                 }
-            } else if (ErrorLevel = 1) {
+            } else {
                 Evasive("Sprint")
             }
             ImageSearch,,, 20, 85, 170, 110, *20 creamLib\BasicUI\combat.bmp
@@ -1500,7 +1499,8 @@ Recorder:
     Gui, 3:Submit, Hide
     Gui, 3:Destroy
     If (!KeyCombo) or (!List) {
-        MsgBox,,Vivace's Macro, Missing Info
+        MsgBox,,Vivace's Macro, Missing Infomation, Please Enter Record Key and Record Type
+        ExitApp
     } else {
         IniWrite, %KeyCombo%, settings.ini, Recording, Key
         IniWrite, %List%, settings.ini, Recording, Type
@@ -1570,7 +1570,7 @@ GetLine(Text, var) {
 CheckVars(i, type) {
     for _, v in i {
         if (!v) {
-            MsgBox,,Viavce's Macro, Missing infomation 
+            MsgBox,,Viavce's Macro, Missing infomation %v% is missing
             ExitApp
         }
         Item .= v ","
@@ -1648,8 +1648,7 @@ DurabilityFunction(i, v) {
         }
         Loop, Parse, ColorsID, `,
         {
-            PixelSearch,,, X1, Y1, X2, Y2, %A_LoopField% , 30
-            If (ErrorLevel = 0) {
+            If (GetColors(X2, Y2, A_LoopField, 30)) {
                 Switch Curr {
                     case "Full" : Curr := "Half"
                     case "Half" : Curr := "Low"
@@ -1737,8 +1736,7 @@ runmacro:
                 SendInput, % sw("w")sw("w", "down")
                 Sleep 4000
                 SendInput, % sw("w", "up")
-                PixelSearch ,,, 30, 130, 36, 133, 0x3A3A3A, 40
-                If (ErrorLevel = 0) {
+                If (GetColors(35, 130, "0x3A3A3A", 40)) {
                     Notify("Wait, 10000")
                     Sleep 10000
                 }
@@ -1771,18 +1769,17 @@ runmacro:
             }
             case "burnfat" : {
                 SendInput, % sw("down","down")sw("w")sw("w", "down")
-                Sleep 4000
+                Sleep, 4000
                 SendInput, % sw("w", "up")sw("down","up")
-                PixelSearch ,,, 30, 130, 36, 133, 0x3A3A3A, 40
-                If (ErrorLevel = 0) {
+                If (GetColors(35, 130, "0x3A3A3A", 40)) {
                     Notify("Wait, 10000")
-                    Sleep 10000
+                    Sleep, 10000
                 }
                 ImageSearch,,, 0, 145, 70, 170, *10 creamLib\BasicUI\DrinkStatus3.bmp
                 If (ErrorLevel = 1) {
                     Notify("status not found")
                     Sendinput, {Backspace}1
-                    Sleep 150
+                    Sleep, 150
                     ImageSearch,,, 65, 525, 750, 585, creamLib\BasicUI\3x2.bmp
                     If (ErrorLevel = 1) { 
                         notify("fatburner has ranout from inventory")
@@ -1793,7 +1790,7 @@ runmacro:
                         waittime := A_TickCount
                         Loop,
                         {
-                            Sleep 100
+                            Sleep, 100
                             ImageSearch,,, 0, 145, 70, 170, *10 creamLib\BasicUI\DrinkStatus3.bmp
                         } Until (ErrorLevel = 0) or (A_TickCount - waittime > 12000)
                         notify("dranked fatburner")
@@ -1804,6 +1801,17 @@ runmacro:
         }
     }
 Return
+
 PressR:
     Sendinput, % sw("r")
 Return
+
+GetColors(x, y, target, tolerance) {
+    PixelGetColor, OutputVar, %x%, %y% , Alt RGB
+    tr := format("{:d}","0x" . substr(target,3,2)),tg := format("{:d}","0x" . substr(target,5,2)), tb := format("{:d}","0x" . substr(target,7,2))
+    pr := format("{:d}","0x" . substr(OutputVar,3,2)),pg := format("{:d}","0x" . substr(OutputVar,5,2)),pb := format("{:d}","0x" . substr(OutputVar,7,2))
+    distance := sqrt((tr-pr)**2+(tg-pg)**2+(pb-tb)**2)
+    if (distance<tolerance)
+        return true
+    return false
+}
