@@ -3,7 +3,7 @@
 SetCapsLockState, Off 
 SetBatchLines -1
 SoundPlay, creamLib\Sound\uwu.mp3
-Version = 2.1.2
+Version = 2.1.3
 if (A_ScreenDPI != 96) {
     Run, ms-settings:display
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
@@ -366,7 +366,8 @@ Treadmill:
         Wait := A_TickCount
         Loop,
         {
-            If (GetColors(350, 250, "0x98FF79", 30)) {
+            If (GetColors(410, 355, "0x98FF79", 10)) {
+                Notify("Found Hand")
                 Break
             }
             Switch T4 {
@@ -499,7 +500,8 @@ Weight:
         Wait := A_TickCount
         Loop,
         {
-            If (GetColors(410, 355, "0x98FF79", 40)) {
+            If (GetColors(410, 355, "0x98FF79", 10)) {
+                Notify("Found Hand")
                 Break
             }
             Switch W2 {
@@ -527,10 +529,10 @@ Weight:
         MouseMove, 409, 491
         Timer := A_TickCount
         Loop,
-        {
-            SetMouseDelay, -1
+        { 
             ImageSearch,x, y, 250, 220, 570, 470, *20 creamLib\TrainingIcon\WeightButton.bmp
             If (ErrorLevel = 0) {
+                SetMouseDelay, -1
                 MouseMove, x, y, 0
                 MouseMove, x+1, y+1, 0
                 Click, 10
@@ -854,7 +856,6 @@ muscle:
     CoordMode, Mouse, Window
     Loop,
     {
-        SetMouseDelay, -1
         if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
             WinActivate
             WinGetPos,,,W,H,A
@@ -1807,7 +1808,7 @@ PressR:
 Return
 
 GetColors(x, y, target, tolerance) {
-    PixelGetColor, OutputVar, %x%, %y% , Alt RGB
+    PixelGetColor, OutputVar, x, y
     tr := format("{:d}","0x" . substr(target,3,2)),tg := format("{:d}","0x" . substr(target,5,2)), tb := format("{:d}","0x" . substr(target,7,2))
     pr := format("{:d}","0x" . substr(OutputVar,3,2)),pg := format("{:d}","0x" . substr(OutputVar,5,2)),pb := format("{:d}","0x" . substr(OutputVar,7,2))
     distance := sqrt((tr-pr)**2+(tg-pg)**2+(pb-tb)**2)
@@ -1815,3 +1816,11 @@ GetColors(x, y, target, tolerance) {
         return true
     return false
 }
+
+
+
+
+
+
+
+
