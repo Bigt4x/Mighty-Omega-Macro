@@ -367,6 +367,14 @@ Treadmill:
         Loop,
         {
             If (GetColors(410, 355, "0x98FF79", 10)) {
+                Loop,
+                {
+                    Sleep 200
+                    Click, 412, 355, 20
+                    If (!GetColors(410, 355, "0x98FF79", 10)) {
+                        Break
+                    }
+                }
                 Notify("Found Hand")
                 Break
             }
@@ -502,6 +510,14 @@ Weight:
         {
             If (GetColors(410, 355, "0x98FF79", 10)) {
                 Notify("Found Hand")
+                Loop,
+                {
+                    Sleep 200
+                    Click, 412, 355, 20
+                    If (!GetColors(410, 355, "0x98FF79", 10)) {
+                        Break
+                    }
+                }
                 Break
             }
             Switch W2 {
@@ -525,7 +541,6 @@ Weight:
                 Ping("not able to locate the hand icon")Exit(W10)
             }
         }
-        Click, 410, 355, 20
         MouseMove, 409, 491
         Timer := A_TickCount
         Loop,
