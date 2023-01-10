@@ -3,7 +3,7 @@
 SetCapsLockState, Off 
 SetBatchLines -1
 SoundPlay, creamLib\Sound\uwu.mp3
-Version = 2.1.3
+Version = 2.1.4
 if (A_ScreenDPI != 96) {
     Run, ms-settings:display
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
@@ -23,7 +23,7 @@ if (v > Version) {
         run, https://github.com/Cweamy/Mighty-Omega-Macro
     }
 }
-__Index__ := "Basic"
+global __Index__ := "Basic"
 Gui, 2:Font, cBlack, Consolas
 Gui, 2:+AlwaysOnTop -Caption
 Gui, 2:Add, Text,xm-8 ym,vivace's macro L to Exit K to Pause
@@ -642,6 +642,7 @@ Return
 SP:
     Gui, Submit, Hide
     Gui, Destroy
+    global Shiftlock = "on"
     CheckVars([SP2, SP4, SP6, SP8, SP10, SP12], "StrikePower")
     if (SP12 = "Video") {
         Gui, 3:Add, Text, y10,Record Key:
@@ -699,7 +700,7 @@ SP:
         ImageSearch,,, 20, 120, 260, 140, *20 creamLib\BasicUI\Stamina.bmp
         If (ErrorLevel = 0) {
             Sleep, 1000
-            SendInput, % sw("s", "down")sw("w")sw("w", "down")
+            SendInput, % sw("Space", "down")sw("Space", "up")sw("s", "down")sw("w")sw("w", "down")
             Sleep, 8000
             Loop,
             {
@@ -1012,6 +1013,9 @@ SS:
                 case "Boxing" : Sendinput, % sw("w", "up")sw("Shift")
                 case "Capoeira" : Sendinput, % sw("d", "up")
             }
+            if (SS2 = "Karate") or (SS2 = "Boxing") or (SS2 = "Muay Thai") or (SS2 = "Advance Brawl") {
+                global Shiftlock = "on"
+            }
             Sendinput, % sw("Backspace")sw("2")
             Sleep 100
             Click
@@ -1059,6 +1063,9 @@ SS:
                 case "Karate" : Sendinput, % sw("a", "up")sw("Shift")
                 case "Boxing" : Sendinput, % sw("a", "up")sw("Shift")
                 case "Capoeira" : Sendinput, % sw("w", "up")
+            }
+            if (SS2 = "Karate") or (SS2 = "Boxing") or (SS2 = "Muay Thai") or (SS2 = "Advance Brawl") {
+                global Shiftlock = "off"
             }
             TimeTotal := A_TickCount - Timer
             Round++
@@ -1403,28 +1410,40 @@ MOUSEOVER() {
 }
 
 Tag(v = "", i = "") {
+    global Shiftlock
     ImageSearch,,, 20, 85, 170, 110, *20 creamLib\BasicUI\combat.bmp
     if (ErrorLevel = 0) {
         SetTimer,, Off
         Notify("Found Combat Tag")
         Ping("You are attacked`, start avoiding enemies")
+        if (Shiftlock = "on") {
+            Sleep 300
+            Sendinput, % sw("Shift")
+            Notify("Shiftlock was on")
+            Sleep 300
+        }
         if (recordingtype != "Do nothing") {
-            if (GetColors(565, 90, "0xFFFFFF", 10)) {
-                Sendinput, {Tab}
+            if (!GetColors(565, 90, "0xFFFFFF", 10)) {
+                Sendinput, % sw("tab")
             }
             If (v = "Record") {
                 Notify("Start Recording")
-                IniRead, Key, settings.ini, Recording, KeyCombo
+                IniRead, Key, settings.ini, Recording, Key
                 If (Key = "Win+Alt+G") {
-                    Send  % "#!" sw("g")
+                    Send, % "#!" sw("g")
                 } else {
-                    Sendinput, % sw(Key)
+                    Send, % sw(key)
                 }
             }
             Sendinput, % sw("o","down")
             Sleep, 1500
             Sendinput, % sw("o","up")
             SoundPlay, creamLib\Sound\broken.wav
+            MouseMove, 575, 120
+            Loop, 20
+            {
+               Send {WheelUp 10}
+            }
             Mou(14, recordingtype)
             Click, 800, 120, down
             Click, 800, 248, up
@@ -1433,11 +1452,12 @@ Tag(v = "", i = "") {
             Click, 800, 376, up
             Mou(2, recordingtype)
             If (v = "ShadowPlay") {
-                IniRead, Key, settings.ini, Recording, KeyCombo
+                Notify("Start Shadow Play")
+                IniRead, Key, settings.ini, Recording, Key
                 If (Key = "Win+Alt+G") {
-                    Sendinput, % "#!" "{" sw("g")
+                    Send, % "#!" "{" sw("g")
                 } else {
-                    Sendinput, % sw(key)
+                    Send, % sw(key)
                 }
             }
         }
