@@ -1348,7 +1348,7 @@ Eat(i, v) {
         If (ErrorLevel = 1) { 
             If (v = "Inventory") or (v = "Scalar+Inventory") or (v = "Protein+Inventory") {
                 Sendinput, % sw("``")
-                Sleep, 500
+                Sleep, 2000
                 Switch i {
                     case "1-0" : v := 95, var := 10
                     case "2-0" : v := 165, var := 9
