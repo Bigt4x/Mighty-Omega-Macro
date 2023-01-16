@@ -28,7 +28,7 @@ git clone https://github.com/Cweamy/Mighty-Omega-Macro/
 2. Right-click on the compressed file that you want to extract.
 3. Select "Extract All" from the context menu that appears.
 4. A new window will appear, asking you where you want to extract the files. Select the location where you want to extract the files, and then click "Extract."
-5. For more information, please join our Discord server.
+5. For more information, please join our [Discord](https://discord.gg/r2Dsygwanb) server.
 
 ## Disclaimer
 Please note that the use of macros in Mighty Omega is allowed. However, we do not take any responsibility for any consequences that may occur as a result of using this macro. Use at your own risk.
