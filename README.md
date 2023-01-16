@@ -1,58 +1,34 @@
-<div id="top"></div>
+# Vivace Macro
 
-<h3 align="center">Vivace's Mighty Omega Macro</h3>
+This is a macro for the game Mighty Omega, created using Autohotkey. The macro is designed to improve gameplay and make it easier to complete tasks in the game.
 
-  <p align="center">
-    Macro for mighty omega using Autohotkey!
-    <br />
-    <a href="https://www.roblox.com/games/4878988249"><strong>Game Link »</strong></a>
-    <br />
-    <br />
-    <a href="https://discord.gg/4rxfjtnMGt">Discord</a>
-    ·
-    <a href="https://discord.gg/4rxfjtnMGt">Report Bug</a>
-    ·
-    <a href="https://discord.gg/4rxfjtnMGt">Request Feature</a>
-  </p>
-</div>
+## Table of Contents
+- [Features](#features)
+- [Installation](#installation)
+  - [Building from source](#building-from-source)
+- [Tutorial](#tutorial)
+- [Disclaimer](#disclaimer)
 
+## Installation
+This macro does not support Mac OS and Linux.
+### Building from source
+```bash
+git clone https://github.com/Cweamy/Mighty-Omega-Macro/
+```
 
+## Features
+- Striking Power
+- Striking Speed
+- Treadmill
+- Weight
+- Durability
 
+## Tutorial
+1. After installing the macro, extract the files from the archive.
+2. Right-click on the compressed file that you want to extract.
+3. Select "Extract All" from the context menu that appears.
+4. A new window will appear, asking you where you want to extract the files. Select the location where you want to extract the files, and then click "Extract."
+5. For more information, please join our Discord server.
 
-
-
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-Free macro for Mighty Omega. My Discord for more info [Link](https://discord.gg/4rxfjtnMGt)
-
-
-
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-First step is you want to install autohotkey 
-
-
-
-### Installation
-
-1. Download Autohotkey at [this](https://www.autohotkey.com/)
-2. Install Program
-
-### Download Macro
-
-• How to Download it? [this](https://youtu.be/Y02T8AiiJxw)
-
-### Tutorial
-   • Watch [this](https://www.youtube.com/watch?v=k5x4WTynWS0&ab_channel=caprisun) video <br>
-    more info [Discord](https://discord.gg/4rxfjtnMGt)
-
-
-
-
-<!-- <p align="right">(<a href="#top">back to top</a>)</p>
-
-
+## Disclaimer
+Please note that the use of macros in Mighty Omega is allowed. However, we do not take any responsibility for any consequences that may occur as a result of using this macro. Use at your own risk.
