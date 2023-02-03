@@ -1347,7 +1347,7 @@ Eat(i, v) {
         ImageSearch,,, 65, 525, 750, 585, creamLib\BasicUI\3x2.bmp
         If (ErrorLevel = 1) { 
             If (v = "Inventory") or (v = "Scalar+Inventory") or (v = "Protein+Inventory") {
-                Sendinput, % sw("``")
+                Sendinput, % sw("``", "down")sw("``","up")
                 Sleep, 2000
                 Switch i {
                     case "1-0" : v := 95, var := 10
@@ -1364,14 +1364,14 @@ Eat(i, v) {
                         v := v + 70
                     } else if (ErrorLevel = 1) {
                         If (A_Index = 1) {
-                            Sendinput, % sw("``")
+                            Sendinput, % sw("``", "down")sw("``","up")
                             Return "Empty"
                         }
                         Break
                     }
                 }
                 Sleep 100
-                Sendinput, % sw("``")
+                Sendinput, sw("``", "down")sw("``","up")
                 MouseMove, 100, 480 ; doesn't have return here to repeat selection again 
             } else {
                 Return "Empty"
